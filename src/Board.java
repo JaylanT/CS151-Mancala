@@ -43,24 +43,38 @@ public class Board {
 		}
 	}
 	
+	public int getTurn() {
+		return turn % 2;
+	}
+	
 	public void move(int position) {
 		int pieces = board[position];
 		board[position] = 0;
 		for(int i = position + 1; pieces > 0; i++, pieces--) {
+			//player 1's turn
 			if(turn % 2 == 0) {
 				if(i == KALAH_2) {
 					i = 0;
 				}
+				//last piece placed on player 1's Kalah
+				else if(i == KALAH_1 && pieces == 1) {
+					turn++;
+				}
 				board[i]++;
-			} else {
-				if(i > KALAH_2) {
+			}
+			//player 2's turn
+			else {
+				if(i == KALAH_1) {
+					i++;
+				} else if(i > KALAH_2) {
 					i = 0;
 				}
-				if(i != KALAH_1) {
-					board[i]++;
+				//last piece placed on player 2's Kalah
+				else if(i == KALAH_2 && pieces == 1) {
+					turn++;
 				}
+				board[i]++;
 			}
-			
 		}
 		turn++;
 	}
@@ -77,6 +91,6 @@ public class Board {
 		}
 		System.out.println(row2);
 		System.out.println(row1);
-		System.out.println();
+		System.out.println("\nPlayer " + (getTurn() + 1) + "'s turn.");
 	}
 }
