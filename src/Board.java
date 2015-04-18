@@ -1,156 +1,110 @@
-import java.util.ArrayList;
+import java.awt.FlowLayout;
+import java.awt.GridLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JPanel;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
-
 /**
  * Mancala board.
+ * 
  * @author Andy, Jaylan, Matt
  *
  */
-public class Board {
-	
-	private int[] board;
-	private int turn;
-	private ArrayList<ChangeListener> listeners;
-	
-	private static final int KALAH_1 = 6;
-	private static final int KALAH_2 = 13;
-	
-	public Board() {
-		board = new int[14];
-		turn = 0;
-		listeners = new ArrayList<ChangeListener>();
+public class Board implements ChangeListener {
+
+	private MancalaModel model;
+	private JButton[] houses;
+	private int[] values;
+	private JFrame frame;
+
+	public Board(MancalaModel m) {
+		model = m;
+		houses = new JButton[14];
+		values = model.getBoard();
+		
+		frame = new JFrame();
+		frame.setLayout(new FlowLayout());
+		
+		for(int i = 0; i < 14; i++) {
+			JButton b = new JButton(Integer.toString(values[i]));
+			final int position = i;
+			b.addActionListener(new ActionListener() {
+				
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					model.update(position);
+				}
+			});
+			houses[i] = b;
+		}
+		
+		JPanel row1 = new JPanel();
+		row1.setLayout(new GridLayout(1, 6));
+		JPanel row2 = new JPanel();
+		row2.setLayout(new GridLayout(1, 6));
+		for(int i = 12; i > 6; i--) {
+			row1.add(houses[i]);
+		}
+		for(int i = 0; i < 6; i++) {
+			row2.add(houses[i]);
+		}
+		houses[MancalaModel.KALAH_1].setEnabled(false);
+		houses[MancalaModel.KALAH_2].setEnabled(false);
+		setTurn();
+		
+		JPanel housePanel = new JPanel();
+		housePanel.setLayout(new GridLayout(2, 0));
+		housePanel.add(row1);
+		housePanel.add(row2);
+		
+		frame.add(houses[MancalaModel.KALAH_2]);
+		frame.add(housePanel);
+		frame.add(houses[MancalaModel.KALAH_1]);
+		
+		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frame.pack();
+		frame.setVisible(true);
 	}
 
-	public void attach(ChangeListener l) {
-		listeners.add(l);
-	}
-	
-	public void update(int position) {
-		move(position);
-		for(ChangeListener l : listeners) {
-			l.stateChanged(new ChangeEvent(this));
-		}
-	}
-	
-	public void setGamePieces(int pieces) {
-		for(int i = 0; i < 14; i++) {
-			if(i != KALAH_1 && i != KALAH_2) {
-				board[i] = pieces;
-			}
-		}
-	}
-	
-	public int getTurn() {
-		return turn % 2;
-	}
-	
-	public void move(int position) {
-		int pieces = board[position];
-		board[position] = 0;
-		for(int i = position + 1; pieces > 0; i++, pieces--) {
-			//player 1's turn
-			if(getTurn() == 0) {
-				if(i == KALAH_2) {
-					i = 0;
-				}
-				if(pieces == 1) {
-					if(i >= 0 && i < KALAH_1) {
-						//landed on empty house of player 1's board
-						if(board[i] == 0 && board[12 - i] != 0) {
-							board[KALAH_1]++;
-							board[i] = -1;
-							board[KALAH_1] += board[12 - i];
-							board[12 - i] = 0;
-						}
-					} 
-					//landed on player 1's Kalah
-					else if(i == KALAH_1) {
-						turn++;
-					}
+	private void setTurn() {
+		if(model.getTurn() == 0) {
+			for(int i = 0; i < MancalaModel.KALAH_1; i++) {
+				if(values[i] == 0) {
+					houses[i].setEnabled(false);
+				} else {
+					houses[i].setEnabled(true);
 				}
 			}
-			//player 2's turn
-			else {
-				if(i == KALAH_1) {
-					i++;
-				} else if(i > KALAH_2) {
-					i = 0;
-				}
-				if(pieces == 1) {
-					if(i > KALAH_1 && i < KALAH_2) {
-						//landed on empty house of player 2's board
-						if(board[i] == 0 && board[12 - i] != 0) {
-							board[KALAH_2]++;
-							board[i] = -1;
-							board[KALAH_2] += board[12 - i];
-							board[12 - i] = 0;
-						}
-					} 
-					//landed on player 2's Kalah
-					else if(i == KALAH_2) {
-						turn++;
-					}
-				}
+			for(int i = 7; i < MancalaModel.KALAH_2; i++) {
+				houses[i].setEnabled(false);
 			}
-			board[i]++;
-		}
-		if(isGameOver()) {
-			findWinner();
-		}
-		turn++;
-	}
-	
-	private void findWinner() {
-		for(int i = 0; i < KALAH_1; i++) {
-			board[KALAH_1] += board[i];
-			board[i] = 0;
-		}
-		for(int i = 7; i < KALAH_2; i++) {
-			board[KALAH_2] += board[i];
-			board[i] = 0;
-		}
-		System.out.println("Results");
-		System.out.println("Player 1:" + board[KALAH_1]);
-		System.out.println("Player 2:" + board[KALAH_2]);
-		System.exit(0);
-	}
-	
-	private boolean isGameOver() {
-		boolean gameOver = false;
-		//check player 1's side
-		int total1 = 0;
-		for(int i = 0; i < KALAH_1; i++) {
-			total1 += board[i];
-		}
-		int total2 = 0;
-		for(int i = 7; i < KALAH_2; i++) {
-			total2 += board[i];
-		}
-		if(total1 == 0 || total2 == 0) {
-			gameOver = true;
-		}
-		return gameOver;
-	}
-	
-	public void print() {
-		String row1 = "";
-		String row2 = "";
-		for(int i = 0; i < 14; i++) {
-			if(i >= 7) {
-				row2 = board[i] + " " + row2;
-			} else {
-				row1 = row1 + board[i] + " ";
-			}
-		}
-		System.out.println(row2);
-		System.out.println("  " + row1);
-		if(getTurn() == 0) {
-			System.out.println("\nPlayer 1's turn (0-5)");
 		} else {
-			System.out.println("\nPlayer 2's turn (7-12)");
+			for(int i = 7; i < MancalaModel.KALAH_2; i++) {
+				if(values[i] == 0) {
+					houses[i].setEnabled(false);
+				} else {
+					houses[i].setEnabled(true);
+				}
+			}
+			for(int i = 0; i < MancalaModel.KALAH_1; i++) {
+				houses[i].setEnabled(false);
+			}
 		}
+	}
+	
+	@Override
+	public void stateChanged(ChangeEvent e) {
+		values = model.getBoard();
+		for(int i = 0; i < 14; i++) {
+			houses[i].setText(Integer.toString(values[i]));
+		}
+		setTurn();
+		frame.pack();
+		frame.repaint();
 	}
 }
