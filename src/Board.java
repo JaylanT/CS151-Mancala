@@ -52,15 +52,25 @@ public class Board {
 		board[position] = 0;
 		for(int i = position + 1; pieces > 0; i++, pieces--) {
 			//player 1's turn
-			if(turn % 2 == 0) {
+			if(getTurn() == 0) {
 				if(i == KALAH_2) {
 					i = 0;
 				}
-				//last piece placed on player 1's Kalah
-				else if(i == KALAH_1 && pieces == 1) {
-					turn++;
+				if(pieces == 1) {
+					if(i >= 0 && i < KALAH_1) {
+						//landed on empty house of player 1's board
+						if(board[i] == 0 && board[12 - i] != 0) {
+							board[KALAH_1]++;
+							board[i] = -1;
+							board[KALAH_1] += board[12 - i];
+							board[12 - i] = 0;
+						}
+					} 
+					//landed on player 1's Kalah
+					else if(i == KALAH_1) {
+						turn++;
+					}
 				}
-				board[i]++;
 			}
 			//player 2's turn
 			else {
@@ -69,14 +79,60 @@ public class Board {
 				} else if(i > KALAH_2) {
 					i = 0;
 				}
-				//last piece placed on player 2's Kalah
-				else if(i == KALAH_2 && pieces == 1) {
-					turn++;
+				if(pieces == 1) {
+					if(i > KALAH_1 && i < KALAH_2) {
+						//landed on empty house of player 2's board
+						if(board[i] == 0 && board[12 - i] != 0) {
+							board[KALAH_2]++;
+							board[i] = -1;
+							board[KALAH_2] += board[12 - i];
+							board[12 - i] = 0;
+						}
+					} 
+					//landed on player 2's Kalah
+					else if(i == KALAH_2) {
+						turn++;
+					}
 				}
-				board[i]++;
 			}
+			board[i]++;
+		}
+		if(isGameOver()) {
+			findWinner();
 		}
 		turn++;
+	}
+	
+	private void findWinner() {
+		for(int i = 0; i < KALAH_1; i++) {
+			board[KALAH_1] += board[i];
+			board[i] = 0;
+		}
+		for(int i = 7; i < KALAH_2; i++) {
+			board[KALAH_2] += board[i];
+			board[i] = 0;
+		}
+		System.out.println("Results");
+		System.out.println("Player 1:" + board[KALAH_1]);
+		System.out.println("Player 2:" + board[KALAH_2]);
+		System.exit(0);
+	}
+	
+	private boolean isGameOver() {
+		boolean gameOver = false;
+		//check player 1's side
+		int total1 = 0;
+		for(int i = 0; i < KALAH_1; i++) {
+			total1 += board[i];
+		}
+		int total2 = 0;
+		for(int i = 7; i < KALAH_2; i++) {
+			total2 += board[i];
+		}
+		if(total1 == 0 || total2 == 0) {
+			gameOver = true;
+		}
+		return gameOver;
 	}
 	
 	public void print() {
@@ -84,13 +140,17 @@ public class Board {
 		String row2 = "";
 		for(int i = 0; i < 14; i++) {
 			if(i >= 7) {
-				row2 = board[i] + row2;
+				row2 = board[i] + " " + row2;
 			} else {
-				row1 = row1 + board[i];
+				row1 = row1 + board[i] + " ";
 			}
 		}
 		System.out.println(row2);
-		System.out.println(row1);
-		System.out.println("\nPlayer " + (getTurn() + 1) + "'s turn.");
+		System.out.println("  " + row1);
+		if(getTurn() == 0) {
+			System.out.println("\nPlayer 1's turn (0-5)");
+		} else {
+			System.out.println("\nPlayer 2's turn (7-12)");
+		}
 	}
 }

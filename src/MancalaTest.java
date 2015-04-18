@@ -1,3 +1,6 @@
+import java.util.InputMismatchException;
+import java.util.Scanner;
+
 
 public class MancalaTest {
 
@@ -5,24 +8,16 @@ public class MancalaTest {
 		Board b = new Board();
 		b.setGamePieces(3);
 		b.print();
-		b.move(4);
-		b.print();
-		b.move(12);
-		b.print();
-		b.move(3);
-		b.print();
-		b.move(2);
-		b.print();
-		b.move(8);
-		b.print();
-		b.move(4);
-		b.print();
-		b.move(1);
-		b.print();
-		b.move(7);
-		b.print();
-		b.move(5);
-		b.print();
+		Scanner in = new Scanner(System.in);
+		while(in.hasNext()) {
+			try {
+				int n = in.nextInt();
+				b.move(n);
+				b.print();
+			} catch(InputMismatchException e) {
+				System.exit(0);
+			}
+		}
 	}
 
 }
