@@ -27,7 +27,6 @@ public class MancalaModel {
 		for (ChangeListener l : listeners) {
 			l.stateChanged(new ChangeEvent(this));
 		}
-		print();
 	}
 
 	public void setGamePieces(int pieces) {
@@ -45,8 +44,45 @@ public class MancalaModel {
 	public int[] getBoard() {
 		return board.clone();
 	}
+
+	public boolean isGameOver() {
+		boolean gameOver = false;
+		// check player 1's side
+		int total1 = 0;
+		for (int i = 0; i < KALAH_1; i++) {
+			total1 += board[i];
+		}
+		int total2 = 0;
+		for (int i = 7; i < KALAH_2; i++) {
+			total2 += board[i];
+		}
+		if (total1 == 0 || total2 == 0) {
+			gameOver = true;
+		}
+		return gameOver;
+	}
+
+	public String findWinner() {
+		for (int i = 0; i < KALAH_1; i++) {
+			board[KALAH_1] += board[i];
+			board[i] = 0;
+		}
+		for (int i = 7; i < KALAH_2; i++) {
+			board[KALAH_2] += board[i];
+			board[i] = 0;
+		}
+		String winner = "";
+		if(board[KALAH_1] > board[KALAH_2]) {
+			winner = "Player A Wins!\n";
+		} else if(board[KALAH_2] > board[KALAH_1]) {
+			winner = "Player B Wins!\n";
+		} else {
+			winner = "Tie";
+		}
+		return winner + "\nResults\n" + "Player A: " + board[KALAH_1] + "\nPlayer B: " + board[KALAH_2];
+	}
 	
-	public void move(int position) {
+	private void move(int position) {
 		int pieces = board[position];
 		board[position] = 0;
 		for (int i = position + 1; pieces > 0; i++, pieces--) {
@@ -96,59 +132,6 @@ public class MancalaModel {
 			}
 			board[i]++;
 		}
-		if (isGameOver()) {
-			findWinner();
-		}
 		turn++;
-	}
-
-	private boolean isGameOver() {
-		boolean gameOver = false;
-		// check player 1's side
-		int total1 = 0;
-		for (int i = 0; i < KALAH_1; i++) {
-			total1 += board[i];
-		}
-		int total2 = 0;
-		for (int i = 7; i < KALAH_2; i++) {
-			total2 += board[i];
-		}
-		if (total1 == 0 || total2 == 0) {
-			gameOver = true;
-		}
-		return gameOver;
-	}
-
-	private void findWinner() {
-		for (int i = 0; i < KALAH_1; i++) {
-			board[KALAH_1] += board[i];
-			board[i] = 0;
-		}
-		for (int i = 7; i < KALAH_2; i++) {
-			board[KALAH_2] += board[i];
-			board[i] = 0;
-		}
-		System.out.println("Results");
-		System.out.println("Player 1:" + board[KALAH_1]);
-		System.out.println("Player 2:" + board[KALAH_2]);
-	}
-
-	public void print() {
-		String row1 = "";
-		String row2 = "";
-		for (int i = 0; i < 14; i++) {
-			if (i >= 7) {
-				row2 = board[i] + " " + row2;
-			} else {
-				row1 = row1 + board[i] + " ";
-			}
-		}
-		System.out.println(row2);
-		System.out.println("  " + row1);
-		if (getTurn() == 0) {
-			System.out.println("\nPlayer 1's turn (0-5)");
-		} else {
-			System.out.println("\nPlayer 2's turn (7-12)");
-		}
 	}
 }
