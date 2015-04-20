@@ -39,7 +39,7 @@ public class Board implements ChangeListener {
 	public Board(MancalaModel m) {
 		model = m;
 
-		JFrame f = new JFrame("Game Size");
+		final JFrame f = new JFrame("Game Size");
 		f.setLayout(new BorderLayout());
 
 		JButton three = new JButton("3");
