@@ -23,7 +23,6 @@ import javax.swing.event.ChangeListener;
 
 /**
  * Mancala board.
- * 
  * @author Andy, Jaylan, Matt
  *
  */
@@ -36,12 +35,21 @@ public class Board implements ChangeListener {
 	private JButton undo = new JButton("Undo");
 	private JFrame frame = new JFrame("Mancala");
 
+	/**
+	 * Constructor
+	 * @param m the model containing game data
+	 */
 	public Board(MancalaModel m) {
 		model = m;
+		gameSizeSelect();
+	}
 
+	/**
+	 * Option for selecting game size.
+	 */
+	private void gameSizeSelect() {
 		final JFrame f = new JFrame("Game Size");
 		f.setLayout(new BorderLayout());
-
 		JButton three = new JButton("3");
 		three.addActionListener(new ActionListener() {
 
@@ -69,7 +77,10 @@ public class Board implements ChangeListener {
 		f.pack();
 		f.setVisible(true);
 	}
-
+	
+	/**
+	 * Makes the game board.
+	 */
 	private void makeGameBoard() {
 		values = model.getBoard();
 		for (int i = 0; i < 14; i++) {
@@ -153,6 +164,9 @@ public class Board implements ChangeListener {
 		frame.setVisible(true);
 	}
 
+	/**
+	 * Enables buttons for current player's turn and disables for the other.
+	 */
 	private void setTurn() {
 		if (model.getTurn() == 0) {
 			for (int i = 0; i < MancalaModel.KALAH_1; i++) {
