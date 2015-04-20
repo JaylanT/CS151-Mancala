@@ -23,7 +23,7 @@ public class MancalaModel {
 		prevPlayerUndo = 0;
 		listeners = new ArrayList<ChangeListener>();
 	}
-	
+
 	public void attach(ChangeListener l) {
 		listeners.add(l);
 	}
@@ -49,7 +49,7 @@ public class MancalaModel {
 		undoCounter++;
 		update();
 	}
-	
+
 	public boolean isUndoable() {
 		return undoCounter < 3;
 	}
@@ -57,7 +57,7 @@ public class MancalaModel {
 	public void move(int position) {
 		prevBoard = board.clone();
 		prevTurn = turn;
-		if(getTurn() != prevPlayerUndo) {
+		if (getTurn() != prevPlayerUndo) {
 			undoCounter = 0;
 		}
 		int pieces = board[position];
@@ -150,9 +150,9 @@ public class MancalaModel {
 			board[i] = 0;
 		}
 		String winner = "";
-		if(board[KALAH_1] > board[KALAH_2]) {
+		if (board[KALAH_1] > board[KALAH_2]) {
 			winner = "Player A Wins!\n";
-		} else if(board[KALAH_2] > board[KALAH_1]) {
+		} else if (board[KALAH_2] > board[KALAH_1]) {
 			winner = "Player B Wins!\n";
 		} else {
 			winner = "Tie";
