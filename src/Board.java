@@ -1,11 +1,17 @@
+import java.awt.BorderLayout;
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.geom.Ellipse2D;
 
 import javax.swing.BorderFactory;
+import javax.swing.Icon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -26,11 +32,13 @@ public class Board implements ChangeListener {
 	private JButton[] houses;
 	private int[] values;
 	private JFrame frame;
+	private JButton undo;
 
 	public Board(MancalaModel m) {
 		model = m;
 		houses = new JButton[14];
 		values = model.getBoard();
+		undo = new JButton("Undo");
 		
 		frame = new JFrame();
 		frame.setLayout(new FlowLayout());
@@ -53,7 +61,7 @@ public class Board implements ChangeListener {
 				
 				@Override
 				public void actionPerformed(ActionEvent e) {
-					model.update(position);
+					model.move(position);
 				}
 			});
 			houses[i] = b;
@@ -75,6 +83,7 @@ public class Board implements ChangeListener {
 		
 		JPanel housePanel = new JPanel();
 		housePanel.setLayout(new GridLayout(4, 0));
+		
 		JTextField labelA = new JTextField("        A1\t   A2              A3              A4               A5               A6");
 		labelA.setEditable(false);
 		labelA.setFont(new Font("SansSerif", Font.BOLD, 14));
@@ -90,21 +99,31 @@ public class Board implements ChangeListener {
 		housePanel.add(labelA);
 		
 		JPanel mancalaA = new JPanel();
-		mancalaA.setLayout(new FlowLayout());
-		JTextField a = new JTextField("  A  ");
-		a.setFont(new Font("SansSerif", Font.BOLD, 20));
-		a.setEditable(false);
-		a.setBorder(BorderFactory.createEmptyBorder());
+		
+		undo.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				model.undo();
+				undo.setEnabled(false);
+			}
+		});
+		undo.setEnabled(false);
+		
+		JTextField aText = new JTextField("  A  ");
+		aText.setFont(new Font("SansSerif", Font.BOLD, 20));
+		aText.setEditable(false);
+		aText.setBorder(BorderFactory.createEmptyBorder());
 		mancalaA.add(houses[MancalaModel.KALAH_1]);
-		mancalaA.add(a);
+		mancalaA.add(aText);
+		mancalaA.add(undo);
 		
 		JPanel mancalaB = new JPanel();
-		mancalaA.setLayout(new FlowLayout());
-		JTextField b = new JTextField("  B  ");
-		b.setFont(new Font("SansSerif", Font.BOLD, 20));
-		b.setEditable(false);
-		b.setBorder(BorderFactory.createEmptyBorder());
-		mancalaB.add(b);
+		JTextField bText = new JTextField("  B  ");
+		bText.setFont(new Font("SansSerif", Font.BOLD, 20));
+		bText.setEditable(false);
+		bText.setBorder(BorderFactory.createEmptyBorder());
+		mancalaB.add(bText);
 		mancalaB.add(houses[MancalaModel.KALAH_2]);
 		
 		frame.add(mancalaB);
@@ -144,7 +163,7 @@ public class Board implements ChangeListener {
 		if(model.isGameOver()) {
 			JFrame resultsFrame = new JFrame();
 			JTextPane results = new JTextPane();
-			results.setText(model.findWinner());
+			results.setText(model.getResults());
 			results.setEditable(false);
 			resultsFrame.add(results);
 			resultsFrame.pack();
@@ -155,8 +174,50 @@ public class Board implements ChangeListener {
 			houses[i].setText(Integer.toString(values[i]));
 			houses[i].setIcon(new Seed(values[i]));
 		}
+		if(model.isUndoable()) {
+			undo.setEnabled(true);
+		}
 		setTurn();
 		frame.pack();
 		frame.repaint();
+	}
+	
+	/**
+	 * Mancala game piece.
+	 * 
+	 * @author Andy, Jaylan, Matt
+	 *
+	 */
+	private class Seed implements Icon {
+		
+		private int amount;
+		
+		public Seed(int amount) {
+			this.amount = amount;
+		}
+
+		@Override
+		public int getIconHeight() {
+			return 0;
+		}
+
+		@Override
+		public int getIconWidth() {
+			return 0;
+		}
+
+		@Override
+		public void paintIcon(Component c, Graphics g, int x, int y) {
+			Graphics2D g2 = (Graphics2D) g;
+			int row = 0;
+			for(int i = 0, j = 0; i < amount; i++, j++) {
+				if(i != 0 && i % 5 == 0) {
+					row += 15;
+					j = 0;
+				}
+				Ellipse2D.Double ellipse = new Ellipse2D.Double(15 * j, row, 15, 15);
+				g2.fill(ellipse);
+			}
+		}
 	}
 }

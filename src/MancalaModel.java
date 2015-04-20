@@ -6,7 +6,11 @@ import javax.swing.event.ChangeListener;
 public class MancalaModel {
 
 	private int[] board;
+	private int[] prevBoard;
 	private int turn;
+	private int prevTurn;
+	private int undoCounter;
+	private int prevPlayerUndo;
 	private ArrayList<ChangeListener> listeners;
 
 	public static final int KALAH_1 = 6;
@@ -15,6 +19,8 @@ public class MancalaModel {
 	public MancalaModel() {
 		board = new int[14];
 		turn = 0;
+		undoCounter = 0;
+		prevPlayerUndo = 0;
 		listeners = new ArrayList<ChangeListener>();
 	}
 	
@@ -22,8 +28,7 @@ public class MancalaModel {
 		listeners.add(l);
 	}
 
-	public void update(int position) {
-		move(position);
+	public void update() {
 		for (ChangeListener l : listeners) {
 			l.stateChanged(new ChangeEvent(this));
 		}
@@ -37,52 +42,24 @@ public class MancalaModel {
 		}
 	}
 
-	public int getTurn() {
-		return turn % 2;
-	}
-
-	public int[] getBoard() {
-		return board.clone();
-	}
-
-	public boolean isGameOver() {
-		boolean gameOver = false;
-		// check player 1's side
-		int total1 = 0;
-		for (int i = 0; i < KALAH_1; i++) {
-			total1 += board[i];
-		}
-		int total2 = 0;
-		for (int i = 7; i < KALAH_2; i++) {
-			total2 += board[i];
-		}
-		if (total1 == 0 || total2 == 0) {
-			gameOver = true;
-		}
-		return gameOver;
-	}
-
-	public String findWinner() {
-		for (int i = 0; i < KALAH_1; i++) {
-			board[KALAH_1] += board[i];
-			board[i] = 0;
-		}
-		for (int i = 7; i < KALAH_2; i++) {
-			board[KALAH_2] += board[i];
-			board[i] = 0;
-		}
-		String winner = "";
-		if(board[KALAH_1] > board[KALAH_2]) {
-			winner = "Player A Wins!\n";
-		} else if(board[KALAH_2] > board[KALAH_1]) {
-			winner = "Player B Wins!\n";
-		} else {
-			winner = "Tie";
-		}
-		return winner + "\nResults\n" + "Player A: " + board[KALAH_1] + "\nPlayer B: " + board[KALAH_2];
+	public void undo() {
+		board = prevBoard.clone();
+		turn = prevTurn;
+		prevPlayerUndo = getTurn();
+		undoCounter++;
+		update();
 	}
 	
-	private void move(int position) {
+	public boolean isUndoable() {
+		return undoCounter < 3;
+	}
+
+	public void move(int position) {
+		prevBoard = board.clone();
+		prevTurn = turn;
+		if(getTurn() != prevPlayerUndo) {
+			undoCounter = 0;
+		}
 		int pieces = board[position];
 		board[position] = 0;
 		for (int i = position + 1; pieces > 0; i++, pieces--) {
@@ -104,6 +81,7 @@ public class MancalaModel {
 					// landed on player 1's Kalah
 					else if (i == KALAH_1) {
 						turn++;
+						undoCounter = 0;
 					}
 				}
 			}
@@ -127,11 +105,58 @@ public class MancalaModel {
 					// landed on player 2's Kalah
 					else if (i == KALAH_2) {
 						turn++;
+						undoCounter = 0;
 					}
 				}
 			}
 			board[i]++;
 		}
 		turn++;
+		update();
+	}
+
+	public int[] getBoard() {
+		return board.clone();
+	}
+
+	public int getTurn() {
+		return turn % 2;
+	}
+
+	public boolean isGameOver() {
+		boolean gameOver = false;
+		// check player 1's side
+		int total1 = 0;
+		for (int i = 0; i < KALAH_1; i++) {
+			total1 += board[i];
+		}
+		int total2 = 0;
+		for (int i = 7; i < KALAH_2; i++) {
+			total2 += board[i];
+		}
+		if (total1 == 0 || total2 == 0) {
+			gameOver = true;
+		}
+		return gameOver;
+	}
+
+	public String getResults() {
+		for (int i = 0; i < KALAH_1; i++) {
+			board[KALAH_1] += board[i];
+			board[i] = 0;
+		}
+		for (int i = 7; i < KALAH_2; i++) {
+			board[KALAH_2] += board[i];
+			board[i] = 0;
+		}
+		String winner = "";
+		if(board[KALAH_1] > board[KALAH_2]) {
+			winner = "Player A Wins!\n";
+		} else if(board[KALAH_2] > board[KALAH_1]) {
+			winner = "Player B Wins!\n";
+		} else {
+			winner = "Tie";
+		}
+		return winner + "\nResults\n" + "Player A: " + board[KALAH_1] + "\nPlayer B: " + board[KALAH_2];
 	}
 }
