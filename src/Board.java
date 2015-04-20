@@ -14,6 +14,7 @@ import javax.swing.BorderFactory;
 import javax.swing.Icon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.JTextPane;
@@ -29,32 +30,50 @@ import javax.swing.event.ChangeListener;
 public class Board implements ChangeListener {
 
 	private MancalaModel model;
-	private JButton[] houses;
 	private int[] values;
-	private JFrame frame;
-	private JButton undo;
+	
+	private JButton[] houses = new JButton[14];
+	private JButton undo = new JButton("Undo");
+	private JFrame frame = new JFrame("Mancala");
 
 	public Board(MancalaModel m) {
 		model = m;
-		houses = new JButton[14];
-		values = model.getBoard();
-		undo = new JButton("Undo");
-		
-		frame = new JFrame();
-		frame.setLayout(new FlowLayout());
-		frame.setTitle("Mancala");
-		
-		makeInterface();
-		
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		frame.pack();
-		frame.setVisible(true);
-	}
 
-	private void makeInterface() {
+		JFrame f = new JFrame("Game Size");
+		f.setLayout(new BorderLayout());
+		
+		JButton three = new JButton("3");
+		three.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				model.setGamePieces(3);
+				f.dispose();
+				makeGameBoard();
+			}
+		});
+		JButton four = new JButton("4");
+		four.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				model.setGamePieces(4);
+				f.dispose();
+				makeGameBoard();
+			}
+		});
+		f.add(new JLabel("Select game size."), BorderLayout.NORTH);
+		f.add(three, BorderLayout.CENTER);
+		f.add(four, BorderLayout.SOUTH);
+		f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		f.pack();
+		f.setVisible(true);
+	}
+	
+	private void makeGameBoard() {
+		values = model.getBoard();
 		for(int i = 0; i < 14; i++) {
-			JButton b = new JButton(Integer.toString(values[i]));
-			b.setIcon(new Seed(values[i]));
+			JButton b = new JButton(Integer.toString(values[i]), new Seed(values[i]));
 			b.setPreferredSize(new Dimension(75, 75));
 			final int position = i;
 			b.addActionListener(new ActionListener() {
@@ -97,9 +116,7 @@ public class Board implements ChangeListener {
 		housePanel.add(row1);
 		housePanel.add(row2);
 		housePanel.add(labelA);
-		
-		JPanel mancalaA = new JPanel();
-		
+	
 		undo.addActionListener(new ActionListener() {
 			
 			@Override
@@ -110,25 +127,30 @@ public class Board implements ChangeListener {
 		});
 		undo.setEnabled(false);
 		
+		JPanel mancalaPanelA = new JPanel();
 		JTextField aText = new JTextField("  A  ");
 		aText.setFont(new Font("SansSerif", Font.BOLD, 20));
 		aText.setEditable(false);
 		aText.setBorder(BorderFactory.createEmptyBorder());
-		mancalaA.add(houses[MancalaModel.KALAH_1]);
-		mancalaA.add(aText);
-		mancalaA.add(undo);
+		mancalaPanelA.add(houses[MancalaModel.KALAH_1]);
+		mancalaPanelA.add(aText);
+		mancalaPanelA.add(undo);
 		
-		JPanel mancalaB = new JPanel();
+		JPanel mancalaPanelB = new JPanel();
 		JTextField bText = new JTextField("  B  ");
 		bText.setFont(new Font("SansSerif", Font.BOLD, 20));
 		bText.setEditable(false);
 		bText.setBorder(BorderFactory.createEmptyBorder());
-		mancalaB.add(bText);
-		mancalaB.add(houses[MancalaModel.KALAH_2]);
+		mancalaPanelB.add(bText);
+		mancalaPanelB.add(houses[MancalaModel.KALAH_2]);
 		
-		frame.add(mancalaB);
+		frame.add(mancalaPanelB);
 		frame.add(housePanel);
-		frame.add(mancalaA);
+		frame.add(mancalaPanelA);
+		frame.setLayout(new FlowLayout());
+		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frame.pack();
+		frame.setVisible(true);
 	}
 	
 	private void setTurn() {
