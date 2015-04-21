@@ -1,36 +1,25 @@
 import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Component;
 import java.awt.Dimension;
-import java.awt.FlowLayout;
-import java.awt.Font;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.geom.Ellipse2D;
 
-import javax.swing.BorderFactory;
-import javax.swing.Icon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JTextField;
 import javax.swing.JTextPane;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
 /**
  * Mancala board.
- * @author Andy, Jaylan, Matt
+ * @author Jaylan, Andy, Matt
  *
  */
 public class Board implements ChangeListener {
 
 	private MancalaModel model;
 	private int[] boardValues;
+	private BoardStyle style;
 
 	private JButton[] houses = new JButton[14];
 	private JButton undo = new JButton("Undo");
@@ -79,13 +68,12 @@ public class Board implements ChangeListener {
 	}
 	
 	/**
-	 * Makes the game board.
+	 * Makes the game board using selected style.
 	 */
 	private void makeGameBoard() {
 		boardValues = model.getBoard();
 		for (int i = 0; i < 14; i++) {
-			JButton b = new JButton(new Seed(boardValues[i]));
-			b.setDisabledIcon(new Seed(boardValues[i]));
+			JButton b = new JButton();
 			b.setPreferredSize(new Dimension(75, 75));
 			b.setToolTipText(Integer.toString(boardValues[i]));
 			final int position = i;
@@ -98,72 +86,34 @@ public class Board implements ChangeListener {
 			});
 			houses[i] = b;
 		}
-
-		JPanel row1 = new JPanel();
-		row1.setLayout(new GridLayout(1, 6));
-		JPanel row2 = new JPanel();
-		row2.setLayout(new GridLayout(1, 6));
-		for (int i = 12; i > 6; i--) {
-			row1.add(houses[i]);
-		}
-		for (int i = 0; i < 6; i++) {
-			row2.add(houses[i]);
-		}
-		houses[MancalaModel.KALAH_1].setEnabled(false);
-		houses[MancalaModel.KALAH_2].setEnabled(false);
-		setTurn();
-
-		JPanel housePanel = new JPanel();
-		housePanel.setLayout(new GridLayout(4, 0));
-
-		JTextField labelA = new JTextField("        A1\t   A2              A3              A4               A5               A6");
-		labelA.setEditable(false);
-		labelA.setFont(new Font("SansSerif", Font.BOLD, 14));
-		labelA.setBorder(BorderFactory.createEmptyBorder());
-		JTextField labelB = new JTextField("       B1\t  B2              B3              B4              B5               B6");
-		labelB.setEditable(false);
-		labelB.setFont(new Font("SansSerif", Font.BOLD, 14));
-		labelB.setBorder(BorderFactory.createEmptyBorder());
-
-		housePanel.add(labelB);
-		housePanel.add(row1);
-		housePanel.add(row2);
-		housePanel.add(labelA);
-
-		undo.addActionListener(new ActionListener() {
-
+		
+		JFrame styleFrame = new JFrame();
+		styleFrame.setLayout(new BorderLayout());
+		
+		JButton blackWhite = new JButton("Black and White");
+		blackWhite.addActionListener(new ActionListener() {
+			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				model.undo();
-				undo.setEnabled(false);
+				style = new BlackAndWhiteBoard();
+				style.makeBoard(frame, houses, boardValues, undo, model);
+				setTurn();
 			}
 		});
-		undo.setEnabled(false);
-
-		JPanel mancalaPanelA = new JPanel();
-		JTextField aText = new JTextField("  A  ");
-		aText.setFont(new Font("SansSerif", Font.BOLD, 20));
-		aText.setEditable(false);
-		aText.setBorder(BorderFactory.createEmptyBorder());
-		mancalaPanelA.add(houses[MancalaModel.KALAH_1]);
-		mancalaPanelA.add(aText);
-		mancalaPanelA.add(undo);
-
-		JPanel mancalaPanelB = new JPanel();
-		JTextField bText = new JTextField("  B  ");
-		bText.setFont(new Font("SansSerif", Font.BOLD, 20));
-		bText.setEditable(false);
-		bText.setBorder(BorderFactory.createEmptyBorder());
-		mancalaPanelB.add(bText);
-		mancalaPanelB.add(houses[MancalaModel.KALAH_2]);
-
-		frame.add(mancalaPanelB);
-		frame.add(housePanel);
-		frame.add(mancalaPanelA);
-		frame.setLayout(new FlowLayout());
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		frame.pack();
-		frame.setVisible(true);
+		JButton brown = new JButton("Brown");
+		brown.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				style = new BrownBoard();
+				style.makeBoard(frame, houses, boardValues, undo, model);
+				setTurn();
+			}
+		});
+		styleFrame.add(blackWhite, BorderLayout.NORTH);
+		styleFrame.add(brown, BorderLayout.CENTER);
+		styleFrame.pack();
+		styleFrame.setVisible(true);
 	}
 
 	/**
@@ -174,29 +124,29 @@ public class Board implements ChangeListener {
 			for (int i = 0; i < MancalaModel.KALAH_1; i++) {
 				if (boardValues[i] == 0) {
 					houses[i].setEnabled(false);
-					houses[i].setBackground(Color.decode("0xdc9a58"));
+					style.setBackgroundDark(houses[i]);
 				} else {
 					houses[i].setEnabled(true);
-					houses[i].setBackground(Color.decode("0xc3803f"));
+					style.setBackgroundLight(houses[i]);
 				}
 			}
 			for (int i = 7; i < MancalaModel.KALAH_2; i++) {
 				houses[i].setEnabled(false);
-				houses[i].setBackground(Color.decode("0xdc9a58"));
+				style.setBackgroundDark(houses[i]);
 			}
 		} else {
 			for (int i = 7; i < MancalaModel.KALAH_2; i++) {
 				if (boardValues[i] == 0) {
 					houses[i].setEnabled(false);
-					houses[i].setBackground(Color.decode("0xdc9a58"));
+					style.setBackgroundDark(houses[i]);
 				} else {
 					houses[i].setEnabled(true);
-					houses[i].setBackground(Color.decode("0xc3803f"));
+					style.setBackgroundLight(houses[i]);
 				}
 			}
 			for (int i = 0; i < MancalaModel.KALAH_1; i++) {
 				houses[i].setEnabled(false);
-				houses[i].setBackground(Color.decode("0xdc9a58"));
+				style.setBackgroundDark(houses[i]);
 			}
 		}
 	}
@@ -214,10 +164,8 @@ public class Board implements ChangeListener {
 		}
 		boardValues = model.getBoard();
 		for (int i = 0; i < 14; i++) {
-//			houses[i].setText(Integer.toString(boardValues[i]));
 			houses[i].setToolTipText(Integer.toString(boardValues[i]));
-			houses[i].setIcon(new Seed(boardValues[i]));
-			houses[i].setDisabledIcon(new Seed(boardValues[i]));
+			style.setIcons(i);
 		}
 		if (model.isUndoable()) {
 			undo.setEnabled(true);
@@ -226,43 +174,5 @@ public class Board implements ChangeListener {
 		frame.pack();
 		frame.repaint();
 	}
-
-	/**
-	 * Mancala game piece.
-	 * @author Andy, Jaylan, Matt
-	 *
-	 */
-	private class Seed implements Icon {
-
-		private int amount;
-
-		public Seed(int amount) {
-			this.amount = amount;
-		}
-
-		@Override
-		public int getIconHeight() {
-			return 0;
-		}
-
-		@Override
-		public int getIconWidth() {
-			return 0;
-		}
-
-		@Override
-		public void paintIcon(Component c, Graphics g, int x, int y) {
-			Graphics2D g2 = (Graphics2D) g;
-			g2.setColor(Color.decode("0x9B111E"));
-			int row = 0;
-			for (int i = 0, j = 0; i < amount; i++, j++) {
-				if (i != 0 && i % 5 == 0) {
-					row += 15;
-					j = 0;
-				}
-				Ellipse2D.Double ellipse = new Ellipse2D.Double(15 * j, row, 15, 15);
-				g2.fill(ellipse);
-			}
-		}
-	}
+	
 }

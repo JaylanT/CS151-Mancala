@@ -50,7 +50,7 @@ public class MancalaModel {
 
 	/**
 	 * Sets the starting game size.
-	 * @param pieces the amount of starting pieces in each pit
+	 * @param pieces the amount of starting pieces in each house
 	 */
 	public void setGamePieces(int pieces) {
 		for (int i = 0; i < 14; i++) {
@@ -61,8 +61,8 @@ public class MancalaModel {
 	}
 
 	/**
-	 * Moves the seeds in the selected pit.
-	 * @param position the index of the pit
+	 * Moves the seeds in the selected house.
+	 * @param position the index of the house
 	 */
 	public void move(int position) {
 		prevBoard = board.clone();
@@ -154,7 +154,7 @@ public class MancalaModel {
 
 	/**
 	 * Gets the current player turn.
-	 * @return the current turn (player 1 if 0, player 2 if 1)
+	 * @return the current turn (player A if 0, player B if 1)
 	 */
 	public int getTurn() {
 		return turn % 2;
@@ -205,7 +205,7 @@ public class MancalaModel {
 		} else if (board[KALAH_2] > board[KALAH_1]) {
 			winner = "Player B Wins!\n";
 		} else {
-			winner = "Tie";
+			winner = "Tie\n";
 		}
 		return winner + "\nResults\n" + "Player A: " + board[KALAH_1] + "\nPlayer B: " + board[KALAH_2];
 	}
