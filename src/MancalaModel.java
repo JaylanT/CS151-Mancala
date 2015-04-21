@@ -61,25 +61,6 @@ public class MancalaModel {
 	}
 
 	/**
-	 * Undoes previous move.
-	 */
-	public void undo() {
-		board = prevBoard.clone();
-		turn = prevTurn;
-		prevPlayerUndo = getTurn();
-		undoCounter++;
-		update();
-	}
-
-	/**
-	 * Checks if player can still undo. Max of 3 undos per turn.
-	 * @return if player can undo
-	 */
-	public boolean isUndoable() {
-		return undoCounter < 3;
-	}
-
-	/**
 	 * Moves the seeds in the selected pit.
 	 * @param position the index of the pit
 	 */
@@ -145,6 +126,25 @@ public class MancalaModel {
 	}
 
 	/**
+	 * Undoes previous move.
+	 */
+	public void undo() {
+		board = prevBoard.clone();
+		turn = prevTurn;
+		prevPlayerUndo = getTurn();
+		undoCounter++;
+		update();
+	}
+
+	/**
+	 * Checks if player can still undo. Max of 3 undos per turn.
+	 * @return if player can undo
+	 */
+	public boolean isUndoable() {
+		return undoCounter < 3;
+	}
+
+	/**
 	 * Gets a copy of the board's values.
 	 * @return a copy of the board's values
 	 */
@@ -198,7 +198,7 @@ public class MancalaModel {
 			board[KALAH_2] += board[i];
 			board[i] = 0;
 		}
-		// finds winner or tie
+		// find winner or else tie
 		String winner = "";
 		if (board[KALAH_1] > board[KALAH_2]) {
 			winner = "Player A Wins!\n";

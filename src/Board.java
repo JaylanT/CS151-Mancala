@@ -1,4 +1,5 @@
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
@@ -29,7 +30,7 @@ import javax.swing.event.ChangeListener;
 public class Board implements ChangeListener {
 
 	private MancalaModel model;
-	private int[] values;
+	private int[] boardValues;
 
 	private JButton[] houses = new JButton[14];
 	private JButton undo = new JButton("Undo");
@@ -41,13 +42,12 @@ public class Board implements ChangeListener {
 	 */
 	public Board(MancalaModel m) {
 		model = m;
-		gameSizeSelect();
 	}
 
 	/**
-	 * Option for selecting game size.
+	 * Starts the game by allowing user to select game size.
 	 */
-	private void gameSizeSelect() {
+	public void startGame() {
 		final JFrame f = new JFrame("Game Size");
 		f.setLayout(new BorderLayout());
 		JButton three = new JButton("3");
@@ -82,10 +82,12 @@ public class Board implements ChangeListener {
 	 * Makes the game board.
 	 */
 	private void makeGameBoard() {
-		values = model.getBoard();
+		boardValues = model.getBoard();
 		for (int i = 0; i < 14; i++) {
-			JButton b = new JButton(Integer.toString(values[i]), new Seed(values[i]));
+			JButton b = new JButton(new Seed(boardValues[i]));
+			b.setDisabledIcon(new Seed(boardValues[i]));
 			b.setPreferredSize(new Dimension(75, 75));
+			b.setToolTipText(Integer.toString(boardValues[i]));
 			final int position = i;
 			b.addActionListener(new ActionListener() {
 
@@ -170,26 +172,31 @@ public class Board implements ChangeListener {
 	private void setTurn() {
 		if (model.getTurn() == 0) {
 			for (int i = 0; i < MancalaModel.KALAH_1; i++) {
-				if (values[i] == 0) {
+				if (boardValues[i] == 0) {
 					houses[i].setEnabled(false);
+					houses[i].setBackground(Color.decode("0xdc9a58"));
 				} else {
 					houses[i].setEnabled(true);
+					houses[i].setBackground(Color.decode("0xc3803f"));
 				}
 			}
 			for (int i = 7; i < MancalaModel.KALAH_2; i++) {
-				houses[i].setDisabledIcon(new Seed(values[i]));
 				houses[i].setEnabled(false);
+				houses[i].setBackground(Color.decode("0xdc9a58"));
 			}
 		} else {
 			for (int i = 7; i < MancalaModel.KALAH_2; i++) {
-				if (values[i] == 0) {
+				if (boardValues[i] == 0) {
 					houses[i].setEnabled(false);
+					houses[i].setBackground(Color.decode("0xdc9a58"));
 				} else {
 					houses[i].setEnabled(true);
+					houses[i].setBackground(Color.decode("0xc3803f"));
 				}
 			}
 			for (int i = 0; i < MancalaModel.KALAH_1; i++) {
 				houses[i].setEnabled(false);
+				houses[i].setBackground(Color.decode("0xdc9a58"));
 			}
 		}
 	}
@@ -205,10 +212,12 @@ public class Board implements ChangeListener {
 			resultsFrame.pack();
 			resultsFrame.setVisible(true);
 		}
-		values = model.getBoard();
+		boardValues = model.getBoard();
 		for (int i = 0; i < 14; i++) {
-			houses[i].setText(Integer.toString(values[i]));
-			houses[i].setIcon(new Seed(values[i]));
+//			houses[i].setText(Integer.toString(boardValues[i]));
+			houses[i].setToolTipText(Integer.toString(boardValues[i]));
+			houses[i].setIcon(new Seed(boardValues[i]));
+			houses[i].setDisabledIcon(new Seed(boardValues[i]));
 		}
 		if (model.isUndoable()) {
 			undo.setEnabled(true);
@@ -220,7 +229,6 @@ public class Board implements ChangeListener {
 
 	/**
 	 * Mancala game piece.
-	 * 
 	 * @author Andy, Jaylan, Matt
 	 *
 	 */
@@ -245,6 +253,7 @@ public class Board implements ChangeListener {
 		@Override
 		public void paintIcon(Component c, Graphics g, int x, int y) {
 			Graphics2D g2 = (Graphics2D) g;
+			g2.setColor(Color.decode("0x9B111E"));
 			int row = 0;
 			for (int i = 0, j = 0; i < amount; i++, j++) {
 				if (i != 0 && i % 5 == 0) {
