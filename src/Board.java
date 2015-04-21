@@ -1,5 +1,4 @@
 import java.awt.BorderLayout;
-import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -23,7 +22,6 @@ public class Board implements ChangeListener {
 
 	private JButton[] houses = new JButton[14];
 	private JButton undo = new JButton("Undo");
-	private JFrame frame = new JFrame("Mancala");
 
 	/**
 	 * Constructor
@@ -74,7 +72,6 @@ public class Board implements ChangeListener {
 		boardValues = model.getBoard();
 		for (int i = 0; i < 14; i++) {
 			JButton b = new JButton();
-			b.setPreferredSize(new Dimension(75, 75));
 			b.setToolTipText(Integer.toString(boardValues[i]));
 			final int position = i;
 			b.addActionListener(new ActionListener() {
@@ -96,7 +93,7 @@ public class Board implements ChangeListener {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				style = new BlackAndWhiteBoard();
-				style.makeBoard(frame, houses, boardValues, undo, model);
+				style.makeBoard(houses, boardValues, undo, model);
 				setTurn();
 			}
 		});
@@ -106,13 +103,14 @@ public class Board implements ChangeListener {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				style = new BrownBoard();
-				style.makeBoard(frame, houses, boardValues, undo, model);
+				style.makeBoard(houses, boardValues, undo, model);
 				setTurn();
 			}
 		});
 		styleFrame.add(blackWhite, BorderLayout.NORTH);
 		styleFrame.add(brown, BorderLayout.CENTER);
 		styleFrame.pack();
+		styleFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		styleFrame.setVisible(true);
 	}
 
@@ -171,8 +169,8 @@ public class Board implements ChangeListener {
 			undo.setEnabled(true);
 		}
 		setTurn();
-		frame.pack();
-		frame.repaint();
+		style.pack();
+		style.repaint();
 	}
 	
 }

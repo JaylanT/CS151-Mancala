@@ -18,25 +18,17 @@ public class BlackAndWhiteBoard implements BoardStyle {
 	private JButton[] houses;
 	private int[] boardValues;
 	private MancalaModel model;
+	private JFrame frame = new JFrame("Mancala");
 	
 	@Override
-	public void makeBoard(JFrame frame, JButton[] houses, int[] boardValues, final JButton undo, MancalaModel m) {
+	public void makeBoard(JButton[] houses, int[] boardValues, final JButton undo, MancalaModel m) {
 		this.houses = houses;
 		this.boardValues = boardValues;
 		this.model = m;
+		
+		// set houses size and icons
 		for (int i = 0; i < 14; i++) {
-			JButton b = new JButton();
-			b.setPreferredSize(new Dimension(75, 75));
-			b.setToolTipText(Integer.toString(boardValues[i]));
-			final int position = i;
-			b.addActionListener(new ActionListener() {
-
-				@Override
-				public void actionPerformed(ActionEvent e) {
-					model.move(position);
-				}
-			});
-			houses[i] = b;
+			houses[i].setPreferredSize(new Dimension(75, 75));
 			setIcons(i);
 		}
 
@@ -121,6 +113,16 @@ public class BlackAndWhiteBoard implements BoardStyle {
 		boardValues = model.getBoard();
 		houses[i].setIcon(new ExtravaganzaCircleSeed(boardValues[i]));
 		houses[i].setDisabledIcon(new ExtravaganzaCircleSeed(boardValues[i]));
+	}
+
+	@Override
+	public void pack() {
+		frame.pack();
+	}
+
+	@Override
+	public void repaint() {
+		frame.repaint();
 	}
 	
 }

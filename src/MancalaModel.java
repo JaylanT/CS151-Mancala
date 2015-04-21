@@ -15,7 +15,7 @@ public class MancalaModel {
 	private int turn;
 	private int prevTurn;
 	private int undoCounter;
-	private int prevPlayerUndo;
+	private int prevPlayerToUndo;
 	private ArrayList<ChangeListener> listeners;
 
 	public static final int KALAH_1 = 6;
@@ -28,7 +28,7 @@ public class MancalaModel {
 		board = new int[14];
 		turn = 0;
 		undoCounter = 0;
-		prevPlayerUndo = 0;
+		prevPlayerToUndo = 0;
 		listeners = new ArrayList<ChangeListener>();
 	}
 
@@ -67,7 +67,7 @@ public class MancalaModel {
 	public void move(int position) {
 		prevBoard = board.clone();
 		prevTurn = turn;
-		if (getTurn() != prevPlayerUndo) {
+		if (getTurn() != prevPlayerToUndo) {
 			undoCounter = 0;
 		}
 		int pieces = board[position];
@@ -131,7 +131,7 @@ public class MancalaModel {
 	public void undo() {
 		board = prevBoard.clone();
 		turn = prevTurn;
-		prevPlayerUndo = getTurn();
+		prevPlayerToUndo = getTurn();
 		undoCounter++;
 		update();
 	}

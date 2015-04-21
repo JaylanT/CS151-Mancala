@@ -1,4 +1,5 @@
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.GridLayout;
@@ -17,14 +18,17 @@ public class BrownBoard implements BoardStyle {
 	private JButton[] houses;
 	private int[] boardValues;
 	private MancalaModel model;
+	private JFrame frame = new JFrame("Mancala");
 	
 	@Override
-	public void makeBoard(JFrame frame, JButton[] houses, int[] boardValues, final JButton undo, MancalaModel m) {
+	public void makeBoard(JButton[] houses, int[] boardValues, final JButton undo, MancalaModel m) {
 		this.houses = houses;
 		this.boardValues = boardValues;
 		this.model = m;
 		
+		// set houses size and icons
 		for (int i = 0; i < 14; i++) {
+			houses[i].setPreferredSize(new Dimension(75, 75));
 			setIcons(i);
 		}
 
@@ -109,6 +113,16 @@ public class BrownBoard implements BoardStyle {
 		boardValues = model.getBoard();
 		houses[i].setIcon(new RedCircleSeed(boardValues[i]));
 		houses[i].setDisabledIcon(new RedCircleSeed(boardValues[i]));
+	}
+
+	@Override
+	public void pack() {
+		frame.pack();
+	}
+
+	@Override
+	public void repaint() {
+		frame.repaint();
 	}
 	
 }
