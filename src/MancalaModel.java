@@ -12,6 +12,7 @@ public class MancalaModel {
 
 	private int[] board;
 	private int[] prevBoard;
+	private int gameSize;
 	private int turn;
 	private int prevTurn;
 	private int undoCounter;
@@ -50,16 +51,21 @@ public class MancalaModel {
 
 	/**
 	 * Sets the starting game size.
-	 * @param pieces the amount of starting pieces in each house
+	 * @param size the amount of starting pieces in each house
 	 */
-	public void setGamePieces(int pieces) {
+	public void setGameSize(int size) {
+		gameSize = size;
 		for (int i = 0; i < 14; i++) {
 			if (i != KALAH_1 && i != KALAH_2) {
-				board[i] = pieces;
+				board[i] = size;
 			}
 		}
 	}
 
+	public int getGameSize() {
+		return gameSize;
+	}
+	
 	/**
 	 * Moves the seeds in the selected house.
 	 * @param position the index of the house

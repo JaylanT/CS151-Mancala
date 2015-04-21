@@ -17,11 +17,11 @@ import javax.swing.event.ChangeListener;
 public class Board implements ChangeListener {
 
 	private MancalaModel model;
-	private int[] boardValues;
 	private BoardStyle style;
+	private int[] boardValues;
 
-	private JButton[] houses = new JButton[14];
-	private JButton undo = new JButton("Undo");
+	private JButton[] houses;
+	private JButton undo;
 
 	/**
 	 * Constructor
@@ -29,21 +29,32 @@ public class Board implements ChangeListener {
 	 */
 	public Board(MancalaModel m) {
 		model = m;
+		houses = new JButton[14];
+		undo = new JButton("Undo");
+		undo.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				model.undo();
+				undo.setEnabled(false);
+			}
+		});
+		undo.setEnabled(false);
 	}
 
 	/**
 	 * Starts the game by allowing user to select game size.
 	 */
 	public void startGame() {
-		final JFrame f = new JFrame("Game Size");
-		f.setLayout(new BorderLayout());
+		final JFrame sizeSelectFrame = new JFrame("Game Size");
+		sizeSelectFrame.setLayout(new BorderLayout());
 		JButton three = new JButton("3");
 		three.addActionListener(new ActionListener() {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				model.setGamePieces(3);
-				f.dispose();
+				model.setGameSize(3);
+				sizeSelectFrame.dispose();
 				makeGameBoard();
 			}
 		});
@@ -52,17 +63,17 @@ public class Board implements ChangeListener {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				model.setGamePieces(4);
-				f.dispose();
+				model.setGameSize(4);
+				sizeSelectFrame.dispose();
 				makeGameBoard();
 			}
 		});
-		f.add(new JLabel("Select game size."), BorderLayout.NORTH);
-		f.add(three, BorderLayout.CENTER);
-		f.add(four, BorderLayout.SOUTH);
-		f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		f.pack();
-		f.setVisible(true);
+		sizeSelectFrame.add(new JLabel("Select game size."), BorderLayout.NORTH);
+		sizeSelectFrame.add(three, BorderLayout.CENTER);
+		sizeSelectFrame.add(four, BorderLayout.SOUTH);
+		sizeSelectFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		sizeSelectFrame.pack();
+		sizeSelectFrame.setVisible(true);
 	}
 	
 	/**
@@ -70,6 +81,7 @@ public class Board implements ChangeListener {
 	 */
 	private void makeGameBoard() {
 		boardValues = model.getBoard();
+		
 		for (int i = 0; i < 14; i++) {
 			JButton b = new JButton();
 			b.setToolTipText(Integer.toString(boardValues[i]));
@@ -83,17 +95,20 @@ public class Board implements ChangeListener {
 			});
 			houses[i] = b;
 		}
+		houses[MancalaModel.KALAH_1].setEnabled(false);
+		houses[MancalaModel.KALAH_2].setEnabled(false);
 		
-		JFrame styleFrame = new JFrame();
-		styleFrame.setLayout(new BorderLayout());
+		final JFrame styleSelectFrame = new JFrame();
+		styleSelectFrame.setLayout(new BorderLayout());
 		
 		JButton blackWhite = new JButton("Black and White");
 		blackWhite.addActionListener(new ActionListener() {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
+				styleSelectFrame.dispose();
 				style = new BlackAndWhiteBoard();
-				style.makeBoard(houses, boardValues, undo, model);
+				style.makeBoard(houses, undo, model.getGameSize());
 				setTurn();
 			}
 		});
@@ -102,16 +117,17 @@ public class Board implements ChangeListener {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
+				styleSelectFrame.dispose();
 				style = new BrownBoard();
-				style.makeBoard(houses, boardValues, undo, model);
+				style.makeBoard(houses, undo, model.getGameSize());
 				setTurn();
 			}
 		});
-		styleFrame.add(blackWhite, BorderLayout.NORTH);
-		styleFrame.add(brown, BorderLayout.CENTER);
-		styleFrame.pack();
-		styleFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		styleFrame.setVisible(true);
+		styleSelectFrame.add(blackWhite, BorderLayout.NORTH);
+		styleSelectFrame.add(brown, BorderLayout.CENTER);
+		styleSelectFrame.pack();
+		styleSelectFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		styleSelectFrame.setVisible(true);
 	}
 
 	/**
@@ -163,7 +179,7 @@ public class Board implements ChangeListener {
 		boardValues = model.getBoard();
 		for (int i = 0; i < 14; i++) {
 			houses[i].setToolTipText(Integer.toString(boardValues[i]));
-			style.setIcons(i);
+			style.setIcons(i, boardValues[i]);
 		}
 		if (model.isUndoable()) {
 			undo.setEnabled(true);

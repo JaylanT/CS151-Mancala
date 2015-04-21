@@ -3,57 +3,51 @@ import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.GridLayout;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.JTextField;
 
 
 public class BlackAndWhiteBoard implements BoardStyle {
 
 	private JButton[] houses;
-	private int[] boardValues;
-	private MancalaModel model;
-	private JFrame frame = new JFrame("Mancala");
+	private JFrame frame;
 	
 	@Override
-	public void makeBoard(JButton[] houses, int[] boardValues, final JButton undo, MancalaModel m) {
+	public void makeBoard(JButton[] houses, final JButton undo, int gameSize) {
 		this.houses = houses;
-		this.boardValues = boardValues;
-		this.model = m;
+		
+		undo.setBackground(Color.white);
 		
 		// set houses size and icons
 		for (int i = 0; i < 14; i++) {
 			houses[i].setPreferredSize(new Dimension(75, 75));
-			setIcons(i);
+			if (i != MancalaModel.KALAH_1 && i != MancalaModel.KALAH_2) {
+				setIcons(i, gameSize);
+			}
 		}
 
 		JPanel row1 = new JPanel();
 		row1.setLayout(new GridLayout(1, 6));
 		JPanel row2 = new JPanel();
 		row2.setLayout(new GridLayout(1, 6));
-		for (int i = 12; i > 6; i--) {
+		for (int i = 12; i > MancalaModel.KALAH_1; i--) {
 			row1.add(houses[i]);
 		}
-		for (int i = 0; i < 6; i++) {
+		for (int i = 0; i < MancalaModel.KALAH_1; i++) {
 			row2.add(houses[i]);
 		}
-		houses[MancalaModel.KALAH_1].setEnabled(false);
-		houses[MancalaModel.KALAH_2].setEnabled(false);
 
 		JPanel housePanel = new JPanel();
 		housePanel.setLayout(new GridLayout(4, 0));
 
-		JTextField labelA = new JTextField("        A1\t   A2              A3              A4               A5               A6");
-		labelA.setEditable(false);
+		JLabel labelA = new JLabel("        A1              A2               A3              A4               A5              A6");
 		labelA.setFont(new Font("SansSerif", Font.BOLD, 14));
 		labelA.setBorder(BorderFactory.createEmptyBorder());
-		JTextField labelB = new JTextField("       B1\t  B2              B3              B4              B5               B6");
-		labelB.setEditable(false);
+		JLabel labelB = new JLabel("       B1               B2              B3              B4              B5              B6");
 		labelB.setFont(new Font("SansSerif", Font.BOLD, 14));
 		labelB.setBorder(BorderFactory.createEmptyBorder());
 
@@ -62,33 +56,23 @@ public class BlackAndWhiteBoard implements BoardStyle {
 		housePanel.add(row2);
 		housePanel.add(labelA);
 
-		undo.addActionListener(new ActionListener() {
-
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				model.undo();
-				undo.setEnabled(false);
-			}
-		});
-		undo.setEnabled(false);
-
 		JPanel mancalaPanelA = new JPanel();
-		JTextField aText = new JTextField("  A  ");
+		JLabel aText = new JLabel("  A  ");
 		aText.setFont(new Font("SansSerif", Font.BOLD, 20));
-		aText.setEditable(false);
 		aText.setBorder(BorderFactory.createEmptyBorder());
 		mancalaPanelA.add(houses[MancalaModel.KALAH_1]);
 		mancalaPanelA.add(aText);
 		mancalaPanelA.add(undo);
 
 		JPanel mancalaPanelB = new JPanel();
-		JTextField bText = new JTextField("  B  ");
+		JLabel bText = new JLabel("  B  ");
 		bText.setFont(new Font("SansSerif", Font.BOLD, 20));
-		bText.setEditable(false);
 		bText.setBorder(BorderFactory.createEmptyBorder());
 		mancalaPanelB.add(bText);
 		mancalaPanelB.add(houses[MancalaModel.KALAH_2]);
 		
+		frame = new JFrame("Mancala");
+		frame.getContentPane().setBackground(Color.black);
 		frame.add(mancalaPanelB);
 		frame.add(housePanel);
 		frame.add(mancalaPanelA);
@@ -109,10 +93,9 @@ public class BlackAndWhiteBoard implements BoardStyle {
 	}
 
 	@Override
-	public void setIcons(int i) {
-		boardValues = model.getBoard();
-		houses[i].setIcon(new ExtravaganzaCircleSeed(boardValues[i]));
-		houses[i].setDisabledIcon(new ExtravaganzaCircleSeed(boardValues[i]));
+	public void setIcons(int i, int value) {
+		houses[i].setIcon(new ExtravaganzaCircleSeed(value));
+		houses[i].setDisabledIcon(new ExtravaganzaCircleSeed(value));
 	}
 
 	@Override
