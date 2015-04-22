@@ -7,13 +7,12 @@ import java.util.Random;
 
 import javax.swing.Icon;
 
-
-public class ExtravaganzaCircleSeed implements Icon {
+public class RainbowCircleSeed implements Icon {
 
 	private int amount;
-	private String[] colors = new String[] {"0x9B111E", "0x50C878", "0xffff00", "0x7a378b", "0xee7621", "0x0000ff", "0x20fa48", "0xee3a8c", "0xFF0000"};
+	private String[] colors = new String[] { "0xED1C24", "0xF26522", "0xF7941D", "0xFFF200", "0x8DC73F", "0x39B54A", "0x00A651", "0x00A99D", "0x00AEEF", "0x0072BC", "0x0054A6", "0x2E3192", "0x662D91", "0x92278F", "0xEC008C", "0xED145B" };
 
-	public ExtravaganzaCircleSeed(int amount) {
+	public RainbowCircleSeed(int amount) {
 		this.amount = amount;
 	}
 
@@ -37,7 +36,7 @@ public class ExtravaganzaCircleSeed implements Icon {
 				j = 0;
 			}
 			Random randomGenerator = new Random();
-			String color = colors[randomGenerator.nextInt(9)];
+			String color = colors[randomGenerator.nextInt(colors.length)];
 			g2.setColor(Color.decode(color));
 			Ellipse2D.Double ellipse = new Ellipse2D.Double(15 * j, row, 15, 15);
 			g2.fill(ellipse);

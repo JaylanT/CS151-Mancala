@@ -101,8 +101,8 @@ public class BlackAndWhiteBoard implements BoardStyle {
 
 	@Override
 	public void setIcons(int i, int value) {
-		houses[i].setIcon(new ExtravaganzaCircleSeed(value));
-		houses[i].setDisabledIcon(new ExtravaganzaCircleSeed(value));
+		houses[i].setIcon(new RainbowCircleSeed(value));
+		houses[i].setDisabledIcon(new RainbowCircleSeed(value));
 	}
 
 	@Override

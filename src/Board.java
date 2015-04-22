@@ -101,7 +101,7 @@ public class Board implements ChangeListener {
 		final JFrame styleSelectFrame = new JFrame();
 		styleSelectFrame.setLayout(new BorderLayout());
 		
-		JButton blackWhite = new JButton("Black and White");
+		JButton blackWhite = new JButton("Black and White with Rainbow");
 		blackWhite.addActionListener(new ActionListener() {
 			
 			@Override
@@ -112,8 +112,8 @@ public class Board implements ChangeListener {
 				setTurn();
 			}
 		});
-		JButton brown = new JButton("Gray");
-		brown.addActionListener(new ActionListener() {
+		JButton gray = new JButton("Gray");
+		gray.addActionListener(new ActionListener() {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -124,7 +124,7 @@ public class Board implements ChangeListener {
 			}
 		});
 		styleSelectFrame.add(blackWhite, BorderLayout.NORTH);
-		styleSelectFrame.add(brown, BorderLayout.CENTER);
+		styleSelectFrame.add(gray, BorderLayout.CENTER);
 		styleSelectFrame.pack();
 		styleSelectFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		styleSelectFrame.setVisible(true);
