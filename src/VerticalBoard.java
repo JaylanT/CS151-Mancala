@@ -1,6 +1,6 @@
+import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.GridLayout;
 
@@ -11,7 +11,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 
-public class BlackAndWhiteBoard implements BoardStyle {
+public class VerticalBoard  implements BoardStyle {
 
 	private JButton[] houses;
 	private JFrame frame;
@@ -19,39 +19,39 @@ public class BlackAndWhiteBoard implements BoardStyle {
 	@Override
 	public void makeBoard(JButton[] houses, final JButton undo, int gameSize) {
 		this.houses = houses;
-		
-		undo.setBackground(Color.white);
+		undo.setBackground(Color.lightGray);
 		
 		// set houses size and icons
 		for (int i = 0; i < 14; i++) {
-			houses[i].setPreferredSize(new Dimension(75, 75));
-			if (i != MancalaModel.KALAH_1 && i != MancalaModel.KALAH_2) {
+			houses[i].setPreferredSize(new Dimension(80, 80));
+			if (i == MancalaModel.KALAH_1 || i == MancalaModel.KALAH_2) {
+				setIcons(i, 0);
+				houses[i].setBackground(Color.LIGHT_GRAY);
+			} else {
 				setIcons(i, gameSize);
 			}
 		}
 
 		JPanel row1 = new JPanel();
-		row1.setLayout(new GridLayout(1, 6));
+		row1.setLayout(new GridLayout(6, 1));
 		JPanel row2 = new JPanel();
-		row2.setLayout(new GridLayout(1, 6));
-		for (int i = 12; i > MancalaModel.KALAH_1; i--) {
+		row2.setLayout(new GridLayout(6, 1));
+		for (int i = 7; i < MancalaModel.KALAH_2; i++) {
 			row1.add(houses[i]);
 		}
-		for (int i = 0; i < MancalaModel.KALAH_1; i++) {
+		for (int i = 5; i >= 0; i--) {
 			row2.add(houses[i]);
 		}
 
 		JPanel housePanel = new JPanel();
-		housePanel.setLayout(new GridLayout(4, 0));
-		housePanel.setBackground(Color.black);
+		housePanel.setLayout(new GridLayout(1, 4));
+		housePanel.setBackground(Color.gray);
 
-		JLabel labelA = new JLabel("        A1              A2               A3              A4               A5              A6");
+		JLabel labelA = new JLabel("A1");
 		labelA.setFont(new Font("SansSerif", Font.BOLD, 14));
-		labelA.setForeground(Color.WHITE);
 		labelA.setBorder(BorderFactory.createEmptyBorder());
-		JLabel labelB = new JLabel("       B1               B2              B3              B4              B5              B6");
+		JLabel labelB = new JLabel("B1");
 		labelB.setFont(new Font("SansSerif", Font.BOLD, 14));
-		labelB.setForeground(Color.WHITE);
 		labelB.setBorder(BorderFactory.createEmptyBorder());
 
 		housePanel.add(labelB);
@@ -60,30 +60,27 @@ public class BlackAndWhiteBoard implements BoardStyle {
 		housePanel.add(labelA);
 
 		JPanel mancalaPanelA = new JPanel();
-		mancalaPanelA.setBackground(Color.black);
+		mancalaPanelA.setBackground(Color.gray);
 		JLabel aText = new JLabel("  A  ");
 		aText.setFont(new Font("SansSerif", Font.BOLD, 20));
-		aText.setForeground(Color.WHITE);
 		aText.setBorder(BorderFactory.createEmptyBorder());
 		mancalaPanelA.add(houses[MancalaModel.KALAH_1]);
 		mancalaPanelA.add(aText);
-		mancalaPanelA.add(undo);
 
 		JPanel mancalaPanelB = new JPanel();
-		mancalaPanelB.setBackground(Color.black);
+		mancalaPanelB.setBackground(Color.gray);
 		JLabel bText = new JLabel("  B  ");
 		bText.setFont(new Font("SansSerif", Font.BOLD, 20));
-		bText.setForeground(Color.WHITE);
 		bText.setBorder(BorderFactory.createEmptyBorder());
 		mancalaPanelB.add(bText);
 		mancalaPanelB.add(houses[MancalaModel.KALAH_2]);
 		
 		frame = new JFrame("Mancala");
-		frame.getContentPane().setBackground(Color.black);
-		frame.add(mancalaPanelB);
-		frame.add(housePanel);
-		frame.add(mancalaPanelA);
-		frame.setLayout(new FlowLayout());
+		frame.setLayout(new BorderLayout());
+		frame.getContentPane().setBackground(Color.gray);
+		frame.add(mancalaPanelA, BorderLayout.NORTH);
+		frame.add(housePanel, BorderLayout.CENTER);
+		frame.add(mancalaPanelB, BorderLayout.SOUTH);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.pack();
 		frame.setVisible(true);
@@ -91,18 +88,18 @@ public class BlackAndWhiteBoard implements BoardStyle {
 
 	@Override
 	public void setBackgroundDark(JButton house) {
-		house.setBackground(Color.black);
+		house.setBackground(Color.gray);
 	}
 	
 	@Override
 	public void setBackgroundLight(JButton house) {
-		house.setBackground(Color.WHITE);
+		house.setBackground(Color.lightGray);
 	}
 
 	@Override
 	public void setIcons(int i, int value) {
-		houses[i].setIcon(new ExtravaganzaCircleSeed(value));
-		houses[i].setDisabledIcon(new ExtravaganzaCircleSeed(value));
+		houses[i].setIcon(new RedSquareSeed(value));
+		houses[i].setDisabledIcon(new RedSquareSeed(value));
 	}
 
 	@Override
@@ -114,5 +111,4 @@ public class BlackAndWhiteBoard implements BoardStyle {
 	public void repaint() {
 		frame.repaint();
 	}
-	
 }

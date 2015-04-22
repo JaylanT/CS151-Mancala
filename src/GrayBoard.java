@@ -11,7 +11,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 
-public class BrownBoard implements BoardStyle {
+public class GrayBoard implements BoardStyle {
 
 	private JButton[] houses;
 	private JFrame frame;
@@ -19,11 +19,15 @@ public class BrownBoard implements BoardStyle {
 	@Override
 	public void makeBoard(JButton[] houses, final JButton undo, int gameSize) {
 		this.houses = houses;
+		undo.setBackground(Color.lightGray);
 		
 		// set houses size and icons
 		for (int i = 0; i < 14; i++) {
 			houses[i].setPreferredSize(new Dimension(80, 80));
-			if (i != MancalaModel.KALAH_1 && i != MancalaModel.KALAH_2) {
+			if (i == MancalaModel.KALAH_1 || i == MancalaModel.KALAH_2) {
+				setIcons(i, 0);
+				houses[i].setBackground(Color.LIGHT_GRAY);
+			} else {
 				setIcons(i, gameSize);
 			}
 		}
@@ -41,6 +45,7 @@ public class BrownBoard implements BoardStyle {
 
 		JPanel housePanel = new JPanel();
 		housePanel.setLayout(new GridLayout(4, 0));
+		housePanel.setBackground(Color.gray);
 
 		JLabel labelA = new JLabel("        A1                A2                A3                A4                A5               A6");
 		labelA.setFont(new Font("SansSerif", Font.BOLD, 14));
@@ -55,6 +60,7 @@ public class BrownBoard implements BoardStyle {
 		housePanel.add(labelA);
 
 		JPanel mancalaPanelA = new JPanel();
+		mancalaPanelA.setBackground(Color.gray);
 		JLabel aText = new JLabel("  A  ");
 		aText.setFont(new Font("SansSerif", Font.BOLD, 20));
 		aText.setBorder(BorderFactory.createEmptyBorder());
@@ -63,6 +69,7 @@ public class BrownBoard implements BoardStyle {
 		mancalaPanelA.add(undo);
 
 		JPanel mancalaPanelB = new JPanel();
+		mancalaPanelB.setBackground(Color.gray);
 		JLabel bText = new JLabel("  B  ");
 		bText.setFont(new Font("SansSerif", Font.BOLD, 20));
 		bText.setBorder(BorderFactory.createEmptyBorder());
@@ -70,6 +77,7 @@ public class BrownBoard implements BoardStyle {
 		mancalaPanelB.add(houses[MancalaModel.KALAH_2]);
 		
 		frame = new JFrame("Mancala");
+		frame.getContentPane().setBackground(Color.gray);
 		frame.add(mancalaPanelB);
 		frame.add(housePanel);
 		frame.add(mancalaPanelA);
@@ -81,12 +89,12 @@ public class BrownBoard implements BoardStyle {
 
 	@Override
 	public void setBackgroundDark(JButton house) {
-		house.setBackground(Color.decode("0xaf814a"));
+		house.setBackground(Color.gray);
 	}
 	
 	@Override
 	public void setBackgroundLight(JButton house) {
-		house.setBackground(Color.decode("0xC19A6B"));
+		house.setBackground(Color.lightGray);
 	}
 
 	@Override

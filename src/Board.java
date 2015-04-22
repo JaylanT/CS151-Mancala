@@ -112,13 +112,13 @@ public class Board implements ChangeListener {
 				setTurn();
 			}
 		});
-		JButton brown = new JButton("Brown");
+		JButton brown = new JButton("Gray");
 		brown.addActionListener(new ActionListener() {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				styleSelectFrame.dispose();
-				style = new BrownBoard();
+				style = new GrayBoard();
 				style.makeBoard(houses, undo, model.getGameSize());
 				setTurn();
 			}
