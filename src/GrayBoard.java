@@ -19,16 +19,15 @@ public class GrayBoard implements BoardStyle {
 	@Override
 	public void makeBoard(JButton[] houses, final JButton undo, int gameSize) {
 		this.houses = houses;
-		undo.setBackground(Color.lightGray);
+		setBackgroundLight(undo);
 		
 		// set houses size and icons
 		for (int i = 0; i < 14; i++) {
 			houses[i].setPreferredSize(new Dimension(80, 80));
-			if (i == MancalaModel.KALAH_1 || i == MancalaModel.KALAH_2) {
-				setIcons(i, 0);
-				houses[i].setBackground(Color.LIGHT_GRAY);
-			} else {
+			if (i != MancalaModel.KALAH_1 && i != MancalaModel.KALAH_2) {
 				setIcons(i, gameSize);
+			} else {
+				setBackgroundLight(houses[i]);
 			}
 		}
 

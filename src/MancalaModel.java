@@ -12,7 +12,6 @@ public class MancalaModel {
 
 	private int[] board;
 	private int[] prevBoard;
-	private int gameSize;
 	private int turn;
 	private int prevTurn;
 	private int undoCounter;
@@ -34,6 +33,7 @@ public class MancalaModel {
 	}
 
 	/**
+	 * Adds ChangeListener to listeners array.
 	 * @param l the ChangeListener
 	 */
 	public void attach(ChangeListener l) {
@@ -54,16 +54,11 @@ public class MancalaModel {
 	 * @param size the amount of starting pieces in each house
 	 */
 	public void setGameSize(int size) {
-		gameSize = size;
 		for (int i = 0; i < 14; i++) {
 			if (i != KALAH_1 && i != KALAH_2) {
 				board[i] = size;
 			}
 		}
-	}
-
-	public int getGameSize() {
-		return gameSize;
 	}
 	
 	/**
