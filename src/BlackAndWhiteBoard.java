@@ -24,7 +24,7 @@ public class BlackAndWhiteBoard implements BoardStyle {
 		// set houses size and icons
 		for (int i = 0; i < 14; i++) {
 			houses[i].setPreferredSize(new Dimension(75, 75));
-			if (i != MancalaModel.KALAH_1 && i != MancalaModel.KALAH_2) {
+			if (i != MancalaModel.KALAH_A && i != MancalaModel.KALAH_B) {
 				setIcons(i, gameSize);
 			} else {
 				setBackgroundLight(houses[i]);
@@ -35,10 +35,10 @@ public class BlackAndWhiteBoard implements BoardStyle {
 		row1.setLayout(new GridLayout(1, 6));
 		JPanel row2 = new JPanel();
 		row2.setLayout(new GridLayout(1, 6));
-		for (int i = 12; i > MancalaModel.KALAH_1; i--) {
+		for (int i = 12; i > MancalaModel.KALAH_A; i--) {
 			row1.add(houses[i]);
 		}
-		for (int i = 0; i < MancalaModel.KALAH_1; i++) {
+		for (int i = 0; i < MancalaModel.KALAH_A; i++) {
 			row2.add(houses[i]);
 		}
 
@@ -66,7 +66,7 @@ public class BlackAndWhiteBoard implements BoardStyle {
 		aText.setFont(new Font("SansSerif", Font.BOLD, 20));
 		aText.setForeground(Color.WHITE);
 		aText.setBorder(BorderFactory.createEmptyBorder());
-		mancalaPanelA.add(houses[MancalaModel.KALAH_1]);
+		mancalaPanelA.add(houses[MancalaModel.KALAH_A]);
 		mancalaPanelA.add(aText);
 		mancalaPanelA.add(undo);
 
@@ -77,7 +77,7 @@ public class BlackAndWhiteBoard implements BoardStyle {
 		bText.setForeground(Color.WHITE);
 		bText.setBorder(BorderFactory.createEmptyBorder());
 		mancalaPanelB.add(bText);
-		mancalaPanelB.add(houses[MancalaModel.KALAH_2]);
+		mancalaPanelB.add(houses[MancalaModel.KALAH_B]);
 		
 		frame = new JFrame("Mancala");
 		frame.getContentPane().setBackground(Color.black);

@@ -24,7 +24,7 @@ public class VerticalBoard  implements BoardStyle {
 		// set houses size and icons
 		for (int i = 0; i < 14; i++) {
 			houses[i].setPreferredSize(new Dimension(80, 80));
-			if (i == MancalaModel.KALAH_1 || i == MancalaModel.KALAH_2) {
+			if (i == MancalaModel.KALAH_A || i == MancalaModel.KALAH_B) {
 				setIcons(i, 0);
 				houses[i].setBackground(Color.LIGHT_GRAY);
 			} else {
@@ -36,7 +36,7 @@ public class VerticalBoard  implements BoardStyle {
 		row1.setLayout(new GridLayout(6, 1));
 		JPanel row2 = new JPanel();
 		row2.setLayout(new GridLayout(6, 1));
-		for (int i = 7; i < MancalaModel.KALAH_2; i++) {
+		for (int i = 7; i < MancalaModel.KALAH_B; i++) {
 			row1.add(houses[i]);
 		}
 		for (int i = 5; i >= 0; i--) {
@@ -64,7 +64,7 @@ public class VerticalBoard  implements BoardStyle {
 		JLabel aText = new JLabel("  A  ");
 		aText.setFont(new Font("SansSerif", Font.BOLD, 20));
 		aText.setBorder(BorderFactory.createEmptyBorder());
-		mancalaPanelA.add(houses[MancalaModel.KALAH_1]);
+		mancalaPanelA.add(houses[MancalaModel.KALAH_A]);
 		mancalaPanelA.add(aText);
 
 		JPanel mancalaPanelB = new JPanel();
@@ -73,7 +73,7 @@ public class VerticalBoard  implements BoardStyle {
 		bText.setFont(new Font("SansSerif", Font.BOLD, 20));
 		bText.setBorder(BorderFactory.createEmptyBorder());
 		mancalaPanelB.add(bText);
-		mancalaPanelB.add(houses[MancalaModel.KALAH_2]);
+		mancalaPanelB.add(houses[MancalaModel.KALAH_B]);
 		
 		frame = new JFrame("Mancala");
 		frame.setLayout(new BorderLayout());

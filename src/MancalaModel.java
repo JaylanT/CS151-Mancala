@@ -18,8 +18,8 @@ public class MancalaModel {
 	private int prevPlayerToUndo;
 	private ArrayList<ChangeListener> listeners;
 
-	public static final int KALAH_1 = 6;
-	public static final int KALAH_2 = 13;
+	public static final int KALAH_A = 6;
+	public static final int KALAH_B = 13;
 
 	/**
 	 * Constructor
@@ -55,7 +55,7 @@ public class MancalaModel {
 	 */
 	public void setGameSize(int size) {
 		for (int i = 0; i < 14; i++) {
-			if (i != KALAH_1 && i != KALAH_2) {
+			if (i != KALAH_A && i != KALAH_B) {
 				board[i] = size;
 			}
 		}
@@ -76,21 +76,21 @@ public class MancalaModel {
 		for (int i = position + 1; pieces > 0; i++, pieces--) {
 			// player 1's turn
 			if (getTurn() == 0) {
-				if (i == KALAH_2) {
+				if (i == KALAH_B) {
 					i = 0;
 				}
 				if (pieces == 1) {
-					if (i >= 0 && i < KALAH_1) {
+					if (i >= 0 && i < KALAH_A) {
 						// last piece landed on empty house of player 1's board
 						if (board[i] == 0 && board[12 - i] != 0) {
-							board[KALAH_1]++;
+							board[KALAH_A]++;
 							board[i] = -1;
-							board[KALAH_1] += board[12 - i];
+							board[KALAH_A] += board[12 - i];
 							board[12 - i] = 0;
 						}
 					}
 					// last piece landed on player 1's Kalah
-					else if (i == KALAH_1) {
+					else if (i == KALAH_A) {
 						turn++;
 						undoCounter = 0;
 					}
@@ -98,23 +98,23 @@ public class MancalaModel {
 			}
 			// player 2's turn
 			else {
-				if (i == KALAH_1) {
+				if (i == KALAH_A) {
 					i++;
-				} else if (i > KALAH_2) {
+				} else if (i > KALAH_B) {
 					i = 0;
 				}
 				if (pieces == 1) {
-					if (i > KALAH_1 && i < KALAH_2) {
+					if (i > KALAH_A && i < KALAH_B) {
 						// last piece landed on empty house of player 2's board
 						if (board[i] == 0 && board[12 - i] != 0) {
-							board[KALAH_2]++;
+							board[KALAH_B]++;
 							board[i] = -1;
-							board[KALAH_2] += board[12 - i];
+							board[KALAH_B] += board[12 - i];
 							board[12 - i] = 0;
 						}
 					}
 					// last piece landed on player 2's Kalah
-					else if (i == KALAH_2) {
+					else if (i == KALAH_B) {
 						turn++;
 						undoCounter = 0;
 					}
@@ -169,12 +169,12 @@ public class MancalaModel {
 		boolean gameOver = false;
 		// check player 1's side
 		int total1 = 0;
-		for (int i = 0; i < KALAH_1; i++) {
+		for (int i = 0; i < KALAH_A; i++) {
 			total1 += board[i];
 		}
 		// check player 2's side
 		int total2 = 0;
-		for (int i = 7; i < KALAH_2; i++) {
+		for (int i = 7; i < KALAH_B; i++) {
 			total2 += board[i];
 		}
 		// check if either side is empty
@@ -190,24 +190,24 @@ public class MancalaModel {
 	 */
 	public String getResults() {
 		// sum up all seeds on player 1's side
-		for (int i = 0; i < KALAH_1; i++) {
-			board[KALAH_1] += board[i];
+		for (int i = 0; i < KALAH_A; i++) {
+			board[KALAH_A] += board[i];
 			board[i] = 0;
 		}
 		// sum up all seeds on player 2's side
-		for (int i = 7; i < KALAH_2; i++) {
-			board[KALAH_2] += board[i];
+		for (int i = 7; i < KALAH_B; i++) {
+			board[KALAH_B] += board[i];
 			board[i] = 0;
 		}
 		// find winner or else tie
 		String winner = "";
-		if (board[KALAH_1] > board[KALAH_2]) {
+		if (board[KALAH_A] > board[KALAH_B]) {
 			winner = "Player A Wins!\n";
-		} else if (board[KALAH_2] > board[KALAH_1]) {
+		} else if (board[KALAH_B] > board[KALAH_A]) {
 			winner = "Player B Wins!\n";
 		} else {
 			winner = "Tie\n";
 		}
-		return winner + "\nResults\n" + "Player A: " + board[KALAH_1] + "\nPlayer B: " + board[KALAH_2];
+		return winner + "\nResults\n" + "Player A: " + board[KALAH_A] + "\nPlayer B: " + board[KALAH_B];
 	}
 }

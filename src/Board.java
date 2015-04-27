@@ -79,7 +79,7 @@ public class Board implements ChangeListener {
 	/**
 	 * Makes the game board using selected style.
 	 */
-	private void makeGameBoard(int size) {
+	private void makeGameBoard(final int size) {
 		houseValues = model.getBoard();
 		
 		for (int i = 0; i < 14; i++) {
@@ -95,8 +95,8 @@ public class Board implements ChangeListener {
 			});
 			houses[i] = b;
 		}
-		houses[MancalaModel.KALAH_1].setEnabled(false);
-		houses[MancalaModel.KALAH_2].setEnabled(false);
+		houses[MancalaModel.KALAH_A].setEnabled(false);
+		houses[MancalaModel.KALAH_B].setEnabled(false);
 		
 		final JFrame styleSelectFrame = new JFrame();
 		styleSelectFrame.setLayout(new BorderLayout());
@@ -135,7 +135,7 @@ public class Board implements ChangeListener {
 	 */
 	private void setTurn() {
 		if (model.getTurn() == 0) {
-			for (int i = 0; i < MancalaModel.KALAH_1; i++) {
+			for (int i = 0; i < MancalaModel.KALAH_A; i++) {
 				if (houseValues[i] == 0) {
 					houses[i].setEnabled(false);
 					style.setBackgroundDark(houses[i]);
@@ -144,12 +144,12 @@ public class Board implements ChangeListener {
 					style.setBackgroundLight(houses[i]);
 				}
 			}
-			for (int i = 7; i < MancalaModel.KALAH_2; i++) {
+			for (int i = 7; i < MancalaModel.KALAH_B; i++) {
 				houses[i].setEnabled(false);
 				style.setBackgroundDark(houses[i]);
 			}
 		} else {
-			for (int i = 7; i < MancalaModel.KALAH_2; i++) {
+			for (int i = 7; i < MancalaModel.KALAH_B; i++) {
 				if (houseValues[i] == 0) {
 					houses[i].setEnabled(false);
 					style.setBackgroundDark(houses[i]);
@@ -158,7 +158,7 @@ public class Board implements ChangeListener {
 					style.setBackgroundLight(houses[i]);
 				}
 			}
-			for (int i = 0; i < MancalaModel.KALAH_1; i++) {
+			for (int i = 0; i < MancalaModel.KALAH_A; i++) {
 				houses[i].setEnabled(false);
 				style.setBackgroundDark(houses[i]);
 			}
