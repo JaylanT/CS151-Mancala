@@ -12,14 +12,14 @@ public class MancalaModel {
 
 	/**
 	 * board = Present Macala Board
-	 * prevBoard = Macala Board before a certain move
+	 * prevBoard = Macala Board before a move
 	 * turn = player chance to make a move
 	 * prevTurn = previous turn
 	 * undoCounter = count number of undos made
 	 * prevPlayerToUndo = determine which player used an undo
 	 * listeners = list of listeners used
-	 * KALAH_1 = Board number for player 1 Kalah
-	 * KALAH_2 = Board number for player 2 Kalah
+	 * KALAH_A = Board number for player A's Kalah
+	 * KALAH_B = Board number for player B's Kalah
 	 */
 	private int[] board;
 	private int[] prevBoard;
@@ -85,14 +85,14 @@ public class MancalaModel {
 		int pieces = board[position];
 		board[position] = 0;
 		for (int i = position + 1; pieces > 0; i++, pieces--) {
-			// player 1's turn
+			// player A's turn
 			if (getTurn() == 0) {
 				if (i == KALAH_B) {
 					i = 0;
 				}
 				if (pieces == 1) {
 					if (i >= 0 && i < KALAH_A) {
-						// last piece landed on empty house of player 1's board
+						// last piece landed on empty house of player A's board
 						if (board[i] == 0 && board[12 - i] != 0) {
 							board[KALAH_A]++;
 							board[i] = -1;
@@ -100,14 +100,14 @@ public class MancalaModel {
 							board[12 - i] = 0;
 						}
 					}
-					// last piece landed on player 1's Kalah
+					// last piece landed on player A's Kalah
 					else if (i == KALAH_A) {
 						turn++;
 						undoCounter = 0;
 					}
 				}
 			}
-			// player 2's turn
+			// player B's turn
 			else {
 				if (i == KALAH_A) {
 					i++;
@@ -116,7 +116,7 @@ public class MancalaModel {
 				}
 				if (pieces == 1) {
 					if (i > KALAH_A && i < KALAH_B) {
-						// last piece landed on empty house of player 2's board
+						// last piece landed on empty house of player B's board
 						if (board[i] == 0 && board[12 - i] != 0) {
 							board[KALAH_B]++;
 							board[i] = -1;
@@ -124,7 +124,7 @@ public class MancalaModel {
 							board[12 - i] = 0;
 						}
 					}
-					// last piece landed on player 2's Kalah
+					// last piece landed on player B's Kalah
 					else if (i == KALAH_B) {
 						turn++;
 						undoCounter = 0;

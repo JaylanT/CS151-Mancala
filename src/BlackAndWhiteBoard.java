@@ -32,10 +32,11 @@ public class BlackAndWhiteBoard implements BoardStyle {
 		 * Set House Size and Icons
 		 */
 		for (int i = 0; i < 14; i++) {
-			houses[i].setPreferredSize(new Dimension(75, 75));
 			if (i != MancalaModel.KALAH_A && i != MancalaModel.KALAH_B) {
+				houses[i].setPreferredSize(new Dimension(75, 75));
 				setIcons(i, gameSize);
 			} else {
+				houses[i].setPreferredSize(new Dimension(75, 120));
 				setBackgroundLight(houses[i]);
 			}
 		}

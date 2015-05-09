@@ -16,11 +16,11 @@ import javax.swing.event.ChangeListener;
 
 
 /**
- * Mancala board.
+ * Mancala game GUI.
  * @author Jaylan, Andy, Matt
  *
  */
-public class Board implements ChangeListener {
+public class MancalaGame implements ChangeListener {
 
 	/**
 	 * model = model for board data
@@ -40,7 +40,7 @@ public class Board implements ChangeListener {
 	 * Constructor
 	 * @param m the model containing game data
 	 */
-	public Board(MancalaModel m) {
+	public MancalaGame(MancalaModel m) {
 		model = m;
 		houses = new JButton[14];
 		undo = new JButton("Undo");
@@ -54,73 +54,71 @@ public class Board implements ChangeListener {
 		});
 		undo.setEnabled(false);
 	}
+	
 	/**
 	 * Initial Menu to choose GAME or HELP
 	 */
 	public void init(){
-			JButton startButton, helpButton, gameButton, menuButton;
-		 JFrame frame = new JFrame("Mandala");
-		    final Container contentPane = frame.getContentPane();
-		    final CardLayout layout = new CardLayout();
-		    contentPane.setLayout(layout);
-			
-			ActionListener listener = new ActionListener() {
-			    public void actionPerformed(ActionEvent e) {
-			    //  layout.next(contentPane);
-					String command = e.getActionCommand();
-					// if any button is click go to appoint panel
-					if(command.equals("Menu")){
-						layout.show(contentPane,"Menu");
-					}
-					else if(command.equals("GAME") || command.equals("START")){
-						frame.setVisible(false);
-						//frame.dispose();
-						startGame();
-					}
-					else if(command.equals("Help")){
-						layout.show(contentPane,"Help");
-					}
-			    }
-			};
-		    
-			/**
-			 * Make START and HELP buttons usable
-			 */
-		    JPanel menu = new Menu();      
-			startButton = new JButton("START");
-			startButton.addActionListener(listener);
-			startButton.setBounds(300,300,200,50);
-			helpButton = new JButton("Help");
-			helpButton.setBounds(300,360,200,50);
-			helpButton.addActionListener(listener);
-			menu.add(startButton);
-	        menu.add(helpButton);
-			contentPane.add(menu,"Menu");
-		    
-			/**
-			 * Allow user to return to main menu
-			 */
-		    JPanel help = new Help();
-		    menuButton = new JButton("Menu");
-		    menuButton.setBounds(600, 485, 130, 75);
-		    menuButton.setForeground(Color.yellow);
-		    menuButton.setBackground(Color.black);
-		    menuButton.setFont(new Font("Serif",Font.BOLD,30));
-		    menuButton.addActionListener(listener);
-		    gameButton = new JButton("GAME");//Button the go to playPanel
-		    gameButton.setBounds(430, 28, 130, 30);
-		    gameButton.setForeground(Color.yellow);
-		    gameButton.setBackground(Color.black);
-		    gameButton.setFont(new Font("Serif",Font.BOLD,30));
-		    gameButton.addActionListener(listener);
-			help.add(menuButton);
-			help.add(gameButton);
-		    contentPane.add(help,"Help");	
-		    frame.setSize(800, 600);
-		    frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		    frame.setVisible(true);
-		  
+		JButton startButton, helpButton, gameButton, menuButton;
+		JFrame menuFrame = new JFrame("Mancala");
+		final Container contentPane = menuFrame.getContentPane();
+		final CardLayout layout = new CardLayout();
+		contentPane.setLayout(layout);
+
+		ActionListener listener = new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				// layout.next(contentPane);
+				String command = e.getActionCommand();
+				// if any button is click go to appoint panel
+				if (command.equals("Menu")) {
+					layout.show(contentPane, "Menu");
+				} else if (command.equals("GAME") || command.equals("START")) {
+					menuFrame.dispose();
+					startGame();
+				} else if (command.equals("Help")) {
+					layout.show(contentPane, "Help");
+				}
+			}
+		};
+
+		/**
+		 * Make START and HELP buttons usable
+		 */
+		JPanel menu = new Menu();
+		startButton = new JButton("START");
+		startButton.addActionListener(listener);
+		startButton.setBounds(300, 300, 200, 50);
+		helpButton = new JButton("Help");
+		helpButton.setBounds(300, 360, 200, 50);
+		helpButton.addActionListener(listener);
+		menu.add(startButton);
+		menu.add(helpButton);
+		contentPane.add(menu, "Menu");
+
+		/**
+		 * Allow user to return to main menu
+		 */
+		JPanel help = new Help();
+		menuButton = new JButton("Menu");
+		menuButton.setBounds(600, 485, 130, 75);
+		menuButton.setForeground(Color.yellow);
+		menuButton.setBackground(Color.black);
+		menuButton.setFont(new Font("Serif", Font.BOLD, 30));
+		menuButton.addActionListener(listener);
+		gameButton = new JButton("GAME");// Button the go to playPanel
+		gameButton.setBounds(430, 28, 130, 30);
+		gameButton.setForeground(Color.yellow);
+		gameButton.setBackground(Color.black);
+		gameButton.setFont(new Font("Serif", Font.BOLD, 30));
+		gameButton.addActionListener(listener);
+		help.add(menuButton);
+		help.add(gameButton);
+		contentPane.add(help, "Help");
+		menuFrame.setSize(800, 600);
+		menuFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		menuFrame.setVisible(true);
 	}
+	
 	/**
 	 * Starts the game by allowing user to select game size.
 	 */
