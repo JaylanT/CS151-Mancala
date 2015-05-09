@@ -60,7 +60,7 @@ public class MancalaGame implements ChangeListener {
 	 */
 	public void init(){
 		JButton startButton, helpButton, gameButton, menuButton;
-		JFrame menuFrame = new JFrame("Mancala");
+		final JFrame menuFrame = new JFrame("Mancala");
 		final Container contentPane = menuFrame.getContentPane();
 		final CardLayout layout = new CardLayout();
 		contentPane.setLayout(layout);
