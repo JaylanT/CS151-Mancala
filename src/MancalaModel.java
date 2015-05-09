@@ -17,6 +17,7 @@ public class MancalaModel {
 	 * prevTurn = previous turn
 	 * undoCounter = count number of undos made
 	 * prevPlayerToUndo = determine which player used an undo
+	 * listeners = list of listeners used
 	 * KALAH_1 = Board number for player 1 Kalah
 	 * KALAH_2 = Board number for player 2 Kalah
 	 */
