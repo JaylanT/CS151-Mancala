@@ -4,7 +4,7 @@ public class MancalaTest {
 		MancalaModel m = new MancalaModel();
 		Board b = new Board(m);
 		m.attach(b);
-		b.startGame();
+		b.init();
 	}
 
 }

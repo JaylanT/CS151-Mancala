@@ -25,8 +25,8 @@ public interface BoardStyle {
 	
 	/**
 	 * Sets the icons on the house
-	 * @param i
-	 * @param value
+	 * @param i = position
+	 * @param value = number of icons
 	 */
 	public void setIcons(int i, int value);
 	

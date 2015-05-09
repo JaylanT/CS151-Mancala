@@ -10,6 +10,16 @@ import javax.swing.event.ChangeListener;
  */
 public class MancalaModel {
 
+	/**
+	 * board = Present Macala Board
+	 * prevBoard = Macala Board before a certain move
+	 * turn = player chance to make a move
+	 * prevTurn = previous turn
+	 * undoCounter = count number of undos made
+	 * prevPlayerToUndo = determine which player used an undo
+	 * KALAH_1 = Board number for player 1 Kalah
+	 * KALAH_2 = Board number for player 2 Kalah
+	 */
 	private int[] board;
 	private int[] prevBoard;
 	private int turn;
@@ -22,7 +32,7 @@ public class MancalaModel {
 	public static final int KALAH_B = 13;
 
 	/**
-	 * Constructor
+	 * Macala Model Constructor
 	 */
 	public MancalaModel() {
 		board = new int[14];

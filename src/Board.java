@@ -1,13 +1,19 @@
 import java.awt.BorderLayout;
+import java.awt.CardLayout;
+import java.awt.Color;
+import java.awt.Container;
+import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JPanel;
 import javax.swing.JTextPane;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
+
 
 /**
  * Mancala board.
@@ -16,6 +22,13 @@ import javax.swing.event.ChangeListener;
  */
 public class Board implements ChangeListener {
 
+	/**
+	 * model = model for board data
+	 * style = type of board
+	 * houseValues = number inside each house
+	 * houses = clickable houses
+	 * undo = reverse last move
+	 */
 	private MancalaModel model;
 	private BoardStyle style;
 	private int[] houseValues;
@@ -41,7 +54,73 @@ public class Board implements ChangeListener {
 		});
 		undo.setEnabled(false);
 	}
-
+	/**
+	 * Initial Menu to choose GAME or HELP
+	 */
+	public void init(){
+			JButton startButton, helpButton, gameButton, menuButton;
+		 JFrame frame = new JFrame("Mandala");
+		    final Container contentPane = frame.getContentPane();
+		    final CardLayout layout = new CardLayout();
+		    contentPane.setLayout(layout);
+			
+			ActionListener listener = new ActionListener() {
+			    public void actionPerformed(ActionEvent e) {
+			    //  layout.next(contentPane);
+					String command = e.getActionCommand();
+					// if any button is click go to appoint panel
+					if(command.equals("Menu")){
+						layout.show(contentPane,"Menu");
+					}
+					else if(command.equals("GAME") || command.equals("START")){
+						frame.setVisible(false);
+						//frame.dispose();
+						startGame();
+					}
+					else if(command.equals("Help")){
+						layout.show(contentPane,"Help");
+					}
+			    }
+			};
+		    
+			/**
+			 * Make START and HELP buttons usable
+			 */
+		    JPanel menu = new Menu();      
+			startButton = new JButton("START");
+			startButton.addActionListener(listener);
+			startButton.setBounds(300,300,200,50);
+			helpButton = new JButton("Help");
+			helpButton.setBounds(300,360,200,50);
+			helpButton.addActionListener(listener);
+			menu.add(startButton);
+	        menu.add(helpButton);
+			contentPane.add(menu,"Menu");
+		    
+			/**
+			 * Allow user to return to main menu
+			 */
+		    JPanel help = new Help();
+		    menuButton = new JButton("Menu");
+		    menuButton.setBounds(600, 485, 130, 75);
+		    menuButton.setForeground(Color.yellow);
+		    menuButton.setBackground(Color.black);
+		    menuButton.setFont(new Font("Serif",Font.BOLD,30));
+		    menuButton.addActionListener(listener);
+		    gameButton = new JButton("GAME");//Button the go to playPanel
+		    gameButton.setBounds(430, 28, 130, 30);
+		    gameButton.setForeground(Color.yellow);
+		    gameButton.setBackground(Color.black);
+		    gameButton.setFont(new Font("Serif",Font.BOLD,30));
+		    gameButton.addActionListener(listener);
+			help.add(menuButton);
+			help.add(gameButton);
+		    contentPane.add(help,"Help");	
+		    frame.setSize(800, 600);
+		    frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		    frame.setVisible(true);
+		  
+	}
 	/**
 	 * Starts the game by allowing user to select game size.
 	 */

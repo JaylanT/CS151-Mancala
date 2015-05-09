@@ -13,22 +13,38 @@ import javax.swing.Icon;
 	 */
 	public class RedCircleSeed implements Icon {
 
+		/**
+		 * amount = number of seeds
+		 */
 		private int amount;
 
+		/**
+		 * Constructor
+		 * @param amount = number of seeds
+		 */
 		public RedCircleSeed(int amount) {
 			this.amount = amount;
 		}
 
+		/**
+		 * Get Icon (seed) Height
+		 */
 		@Override
 		public int getIconHeight() {
 			return 0;
 		}
 
+		/**
+		 * Get Icon (seed) Width
+		 */
 		@Override
 		public int getIconWidth() {
 			return 0;
 		}
 
+		/**
+		 * Paint Red Circle Seeds
+		 */
 		@Override
 		public void paintIcon(Component c, Graphics g, int x, int y) {
 			Graphics2D g2 = (Graphics2D) g;
